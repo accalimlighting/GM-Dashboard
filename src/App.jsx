@@ -235,7 +235,7 @@ const SALES_REP_DATA = RAW_SALES_REP_DATA
 const KPI_CARDS = [
   {
     title: "Total Sales",
-    category: "Revenue",
+    category: "GROSS REVENUE",
     value: `$15.92M`,
     subValue: `Vs 2024: +5.9%`,
     icon: DollarSign,
@@ -245,7 +245,7 @@ const KPI_CARDS = [
   },
   {
     title: "Gross Margin",
-    category: "Efficiency",
+    category: "GROSS MARGIN",
     value: `39.5%`,
     subValue: `Vs 2024: +7.2%`,
     icon: Activity,
@@ -255,7 +255,7 @@ const KPI_CARDS = [
   },
   {
     title: "EBITDA",
-    category: "Profitability",
+    category: "PROFITABILITY (EBITDA)",
     value: `$1.06M`,
     subValue: `Vs 2024: +$2.0M`,
     icon: TrendingUp,
@@ -265,7 +265,7 @@ const KPI_CARDS = [
   },
   {
     title: "Net Income",
-    category: "Bottom Line",
+    category: "NET INCOME",
     value: `$849k`,
     subValue: `Vs 2024: Loss ($1.1M)`,
     icon: PieChart,

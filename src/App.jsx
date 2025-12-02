@@ -804,7 +804,7 @@ const formatPercentWhole = (value) => {
                     <tbody className="divide-y divide-slate-100">
                       {YOY_DATA.map((section, idx) => (
                         <React.Fragment key={idx}>
-                          <tr className="bg-slate-50/50">
+                          <tr className="bg-slate-100">
                             <td colSpan={5} className="px-6 py-2 font-bold text-xs text-slate-500 uppercase tracking-wider">{section.category}</td>
                           </tr>
                           {section.items.map((item, itemIdx) => {

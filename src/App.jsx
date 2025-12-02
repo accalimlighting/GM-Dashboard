@@ -615,9 +615,9 @@ const formatPercentWhole = (value) => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
              
              {/* Chart 1: Profitability Turnaround */}
-             <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
               <h3 className="text-lg font-semibold text-slate-900 mb-6">Profitability Turnaround (2024 vs 2025)</h3>
-              <div className="h-80 w-full">
+              <div className="h-64 sm:h-72 md:h-80 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={HISTORY_DATA} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -650,7 +650,7 @@ const formatPercentWhole = (value) => {
             <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
               <h3 className="text-lg font-semibold text-slate-900 mb-2">2025 Revenue Allocation</h3>
               <p className="text-xs text-slate-500 mb-4">Where did the $15.9M go?</p>
-              <div className="h-80 w-full relative">
+              <div className="h-64 sm:h-72 md:h-80 w-full relative">
                 <ResponsiveContainer width="100%" height="100%">
                   <RePieChart>
                     <Pie
@@ -693,7 +693,7 @@ const formatPercentWhole = (value) => {
                 </div>
               </div>
               
-              <div className="h-80 w-full">
+              <div className="h-64 sm:h-72 md:h-80 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <ComposedChart data={LABOR_EFFICIENCY_DATA} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -741,7 +741,7 @@ const formatPercentWhole = (value) => {
                 </div>
               </div>
               
-              <div className="h-80 w-full">
+              <div className="h-64 sm:h-72 md:h-80 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={COST_EFFICIENCY_DATA} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -767,7 +767,7 @@ const formatPercentWhole = (value) => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 h-full">
             <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 lg:col-span-1">
               <h3 className="text-lg font-semibold text-slate-900 mb-4">Top 5 Expense Drivers (2024 vs 2025)</h3>
-              <div className="h-[500px] w-full">
+              <div className="h-[320px] sm:h-[400px] lg:h-[500px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={TOP_EXPENSES_DATA} layout="vertical" margin={{ top: 20, right: 30, left: 40, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
@@ -841,6 +841,35 @@ const formatPercentWhole = (value) => {
                     </tbody>
                   </table>
               </div>
+              <div className="md:hidden mt-4 space-y-4">
+                {sortedProductData.map((prod, idx) => (
+                  <div key={`mobile-product-${prod.sku}-${idx}`} className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-xs text-slate-400 font-semibold">#{idx + 1}</p>
+                      <span className="text-[11px] font-semibold text-slate-500 uppercase">2025</span>
+                    </div>
+                    <p className="font-mono text-indigo-600 text-sm">{prod.sku}</p>
+                    <h4 className="text-base font-semibold text-slate-900">{prod.desc}</h4>
+                    <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <p className="text-xs text-slate-500 uppercase">Sales</p>
+                        <p className="font-mono text-slate-900">
+                          ${prod.sales.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500 uppercase">% of Revenue</p>
+                        <p className="font-semibold text-slate-700">{prod.share.toFixed(1)}%</p>
+                      </div>
+                    </div>
+                    <div className="mt-3">
+                      <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-indigo-500 rounded-full" style={{ width: `${prod.share * 15}%` }}></div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </>
@@ -861,7 +890,7 @@ const formatPercentWhole = (value) => {
                    <span className="block font-bold text-blue-900 text-lg">$5.1M</span>
                 </div>
               </div>
-              <div className="h-[600px] w-full">
+              <div className="h-[360px] sm:h-[480px] lg:h-[600px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart 
                     data={TOP_CUSTOMERS_DATA} 
@@ -962,6 +991,45 @@ const formatPercentWhole = (value) => {
                   </tbody>
                 </table>
               </div>
+              <div className="md:hidden mt-4 space-y-4">
+                {sortedSalesRepData.map((rep, index) => (
+                  <div key={`mobile-rep-${rep.name}-${index}`} className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-xs text-slate-400 font-semibold">#{index + 1}</p>
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-semibold ${rep.targetHit ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'}`}>
+                        {rep.targetHit ? 'Hit Target' : 'Missed Target'}
+                      </span>
+                    </div>
+                    <h4 className="text-base font-semibold text-slate-900">{rep.name}</h4>
+                    <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <p className="text-xs text-slate-500 uppercase">2024 Sales</p>
+                        <p className="font-mono text-slate-700">{formatCurrencyWhole(rep.sales2024)}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500 uppercase">2025 Sales</p>
+                        <p className="font-mono text-slate-900">{formatCurrencyWhole(rep.sales2025)}</p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500 uppercase">Δ Sales</p>
+                        <p className={`font-mono ${rep.growthAmt >= 0 ? 'text-emerald-600' : 'text-red-600'}`}>
+                          {formatSignedCurrency(rep.growthAmt)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500 uppercase">Δ %</p>
+                        <span className={`inline-flex px-2 py-0.5 rounded text-xs font-semibold ${rep.growthPct >= 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>
+                          {formatPercentWhole(rep.growthPct)}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="mt-3">
+                      <p className="text-xs text-slate-500 uppercase">Target</p>
+                      <p className="font-mono text-slate-700">{rep.target ? formatCurrencyWhole(rep.target) : '—'}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </>
@@ -985,7 +1053,7 @@ const formatPercentWhole = (value) => {
                   </div>
                 </div>
              </div>
-             <div className="h-80 w-full">
+             <div className="h-64 sm:h-72 md:h-80 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <ComposedChart data={PRODUCT_CLASS_DATA} margin={{ top: 10, right: 30, left: 20, bottom: 20 }}>
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
@@ -1122,7 +1190,7 @@ const formatPercentWhole = (value) => {
                   </div>
                 </div>
               </div>
-              <div className="h-[500px] w-full">
+              <div className="h-[320px] sm:h-[400px] lg:h-[500px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <ComposedChart 
                     data={SALES_REP_DATA.slice(0, 20)} 
@@ -1300,6 +1368,34 @@ const formatPercentWhole = (value) => {
                     })}
                   </tbody>
                 </table>
+              </div>
+              <div className="md:hidden mt-4 space-y-4">
+                {sortedCustomerData.map((customer, idx) => (
+                  <div key={`mobile-customer-${customer.name}-${idx}`} className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
+                    <div className="flex items-center justify-between mb-2">
+                      <p className="text-xs text-slate-400 font-semibold">#{idx + 1}</p>
+                      <span className="text-[11px] font-semibold text-slate-500 uppercase">2025</span>
+                    </div>
+                    <h4 className="text-base font-semibold text-slate-900">{customer.name}</h4>
+                    <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
+                      <div>
+                        <p className="text-xs text-slate-500 uppercase">Total Sales</p>
+                        <p className="font-mono text-slate-900">
+                          ${customer.value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-slate-500 uppercase">% of Company</p>
+                        <p className="font-semibold text-slate-700">{customer.share.toFixed(1)}%</p>
+                      </div>
+                    </div>
+                    <div className="mt-3">
+                      <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-blue-500 rounded-full" style={{ width: `${customer.share * 4}%` }}></div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   TrendingUp, 
   DollarSign, 
@@ -90,6 +90,9 @@ const EBITDA_2024 = -953185.16;
 const EBITDA_2025 = 1059431.01;
 const NET_INCOME_2024 = -1138149.23;
 const NET_INCOME_2025 = 849241.03;
+
+const ACCESS_STORAGE_KEY = 'acclaim-dashboard-access';
+const APP_PASSWORD = import.meta.env.VITE_DASHBOARD_PASSWORD || '';
 
 const formatCompactCurrency = (value) => {
   const abs = Math.abs(value);
@@ -314,7 +317,37 @@ const KPI_CARDS = [
 ];
 
 export default function GMDashboard() {
-  const [activeTab, setActiveTab] = useState('overview'); 
+  const [activeTab, setActiveTab] = useState('overview');
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    if (!APP_PASSWORD) return true;
+    if (typeof window === 'undefined') return false;
+    return sessionStorage.getItem(ACCESS_STORAGE_KEY) === 'true';
+  });
+  const [passwordInput, setPasswordInput] = useState('');
+  const [authError, setAuthError] = useState('');
+
+  useEffect(() => {
+    if (!APP_PASSWORD) {
+      setIsAuthenticated(true);
+      return;
+    }
+    if (typeof window === 'undefined') return;
+    const stored = sessionStorage.getItem(ACCESS_STORAGE_KEY) === 'true';
+    setIsAuthenticated(stored);
+  }, []);
+
+  const handlePasswordSubmit = (e) => {
+    e.preventDefault();
+    if (!APP_PASSWORD || passwordInput === APP_PASSWORD) {
+      setIsAuthenticated(true);
+      setAuthError('');
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem(ACCESS_STORAGE_KEY, 'true');
+      }
+      return;
+    }
+    setAuthError('Incorrect password. Please try again.');
+  };
 
   // Calculations for variance
   const calculateVariance = (current, prior, invertColor) => {
@@ -356,6 +389,42 @@ const formatPercentWhole = (value) => {
 
   // Total Revenue for Share Calc
   const TOTAL_REVENUE = TOTAL_REVENUE_2025;
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <div className="bg-white border border-slate-200 shadow-lg rounded-2xl p-8 max-w-md w-full">
+          <div className="text-center mb-6">
+            <img src="/acclaim_logo.svg" alt="Acclaim Lighting" className="h-10 mx-auto mb-4" />
+            <h1 className="text-xl font-semibold text-slate-900">Acclaim GM Dashboard</h1>
+            <p className="text-sm text-slate-500 mt-1">Enter the access password to continue.</p>
+          </div>
+          <form onSubmit={handlePasswordSubmit} className="space-y-4">
+            <div>
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wide block mb-2">
+                Password
+              </label>
+              <input
+                type="password"
+                className="w-full border border-slate-200 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50"
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                placeholder="Enter password"
+                required
+              />
+            </div>
+            {authError && <p className="text-sm text-red-600">{authError}</p>}
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white font-semibold py-2.5 rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Unlock Dashboard
+            </button>
+          </form>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-slate-800 p-4 md:p-8">

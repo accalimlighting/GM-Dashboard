@@ -787,7 +787,7 @@ const formatPercentWhole = (value) => {
             </div>
 
             <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden lg:col-span-2 h-full">
-              <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+              <div className="px-6 py-4 border-b border-slate-100 bg-slate-100">
                 <h3 className="font-semibold text-slate-900">Detailed Year-Over-Year Variance</h3>
               </div>
               <div className="overflow-x-auto">
@@ -898,7 +898,7 @@ const formatPercentWhole = (value) => {
 
             {/* Detailed List Table */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden lg:col-span-3">
-              <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+              <div className="px-6 py-4 border-b border-slate-100 bg-slate-100">
                 <h3 className="font-semibold text-slate-900">Customer Revenue Detail</h3>
               </div>
               <div className="overflow-x-auto">
@@ -1016,7 +1016,7 @@ const formatPercentWhole = (value) => {
 
           {/* Row 2: Top Products Table */}
           <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-             <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
+             <div className="px-6 py-4 border-b border-slate-100 bg-slate-100 flex justify-between items-center">
                 <div>
                   <h3 className="font-semibold text-slate-900">Top 20 Products (YTD)</h3>
                   <p className="text-slate-500 text-xs mt-0.5">Ranked by Line Total</p>
@@ -1183,7 +1183,7 @@ const formatPercentWhole = (value) => {
 
             {/* Sales Rep Table - All Reps */}
             <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden lg:col-span-3">
-              <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+              <div className="px-6 py-4 border-b border-slate-100 bg-slate-100">
                 <h3 className="font-semibold text-slate-900">Sales Rep Detail (All Reps)</h3>
               </div>
               <div className="overflow-x-auto">

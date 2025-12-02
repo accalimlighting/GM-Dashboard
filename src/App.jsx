@@ -305,6 +305,11 @@ const formatSignedCurrency = (value) => {
   return value > 0 ? `+${formatted}` : `-${formatted}`;
 };
 
+const formatPercentWhole = (value) => {
+  if (value === null || value === undefined || Number.isNaN(value)) return 'N/A';
+  return `${Math.round(value)}%`;
+};
+
   // Total Revenue for Share Calc
   const TOTAL_REVENUE = 15918450.52;
 
@@ -864,7 +869,7 @@ const formatSignedCurrency = (value) => {
                     <YAxis
                       yAxisId="right"
                       orientation="right"
-                      tickFormatter={(val) => `${val}%`}
+                      tickFormatter={(val) => `${Math.round(val)}%`}
                       tick={{ fontSize: 11, fill: '#10B981' }}
                       label={{ value: 'Growth % vs 2024', angle: 90, position: 'insideRight', style: { textAnchor: 'middle', fill: '#10B981', fontSize: 11 } }}
                       domain={['dataMin-10', 'dataMax+10']}
@@ -881,7 +886,7 @@ const formatSignedCurrency = (value) => {
                         }
                         if (name === 'growthPct') {
                           return [
-                            val === null || val === undefined ? 'N/A' : `${val.toFixed(1)}%`,
+                            formatPercentWhole(val),
                             'Growth %'
                           ];
                         }
@@ -914,19 +919,17 @@ const formatSignedCurrency = (value) => {
                       <th className="px-6 py-3 text-right bg-slate-50">Δ %</th>
                       <th className="px-6 py-3 text-right bg-slate-50">Target</th>
                       <th className="px-6 py-3 text-center bg-slate-50">Hit Target</th>
-                      <th className="px-6 py-3 text-right bg-slate-50">Incentive %</th>
-                      <th className="px-6 py-3 text-right bg-slate-50">Payout</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {SALES_REP_DATA.map((rep, index) => {
                       const growthPositive = rep.growthAmt >= 0;
-                      const growthBadge =
-                        rep.growthPct === null
-                          ? 'bg-slate-100 text-slate-500'
-                          : growthPositive
-                          ? 'bg-emerald-50 text-emerald-700'
-                          : 'bg-red-50 text-red-700';
+                      const isGrowthNa = rep.growthPct === null || Number.isNaN(rep.growthPct);
+                      const growthBadge = isGrowthNa
+                        ? 'bg-slate-100 text-slate-500'
+                        : growthPositive
+                        ? 'bg-emerald-50 text-emerald-700'
+                        : 'bg-red-50 text-red-700';
                       const targetBadge = rep.targetHit ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600';
                       return (
                         <tr key={index} className="hover:bg-slate-50 transition-colors">
@@ -939,7 +942,7 @@ const formatSignedCurrency = (value) => {
                           </td>
                           <td className="px-6 py-4 text-right">
                             <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-semibold ${growthBadge}`}>
-                              {rep.growthPct === null ? 'N/A' : `${rep.growthPct.toFixed(1)}%`}
+                              {formatPercentWhole(rep.growthPct)}
                             </span>
                           </td>
                           <td className="px-6 py-4 text-right font-mono text-slate-600">
@@ -949,12 +952,6 @@ const formatSignedCurrency = (value) => {
                             <span className={`inline-flex px-2 py-1 rounded text-xs font-semibold ${targetBadge}`}>
                               {rep.targetHit ? 'Yes' : 'No'}
                             </span>
-                          </td>
-                          <td className="px-6 py-4 text-right font-mono text-slate-600">
-                            {rep.incentiveRate !== null ? `${(rep.incentiveRate * 100).toFixed(2)}%` : '—'}
-                          </td>
-                          <td className="px-6 py-4 text-right font-mono text-emerald-600">
-                            {rep.incentivePaid > 0 ? formatCurrencyWhole(rep.incentivePaid) : '—'}
                           </td>
                         </tr>
                       );

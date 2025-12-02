@@ -80,6 +80,17 @@ const HISTORY_DATA = [
   { month: '2025', sales: 15918450, marginPct: 39.5, ebitda: 1059431 },
 ];
 
+const TOTAL_REVENUE_2024 = 15038228.95;
+const TOTAL_REVENUE_2025 = 15918450.52;
+const GROSS_MARGIN_2024 = 32.3;
+const GROSS_MARGIN_2025 = 39.5;
+const GROSS_PROFIT_2024 = 4851198.99;
+const GROSS_PROFIT_2025 = 6288609.87;
+const EBITDA_2024 = -953185.16;
+const EBITDA_2025 = 1059431.01;
+const NET_INCOME_2024 = -1138149.23;
+const NET_INCOME_2025 = 849241.03;
+
 // --- UPDATED CHART DATA ---
 
 // 1. REVENUE ALLOCATION PIE
@@ -178,19 +189,6 @@ const TOP_PRODUCTS_DATA = [
   { rank: 20, sku: "XED-LXCV-OPXQ", desc: "Linear One DMX Ext Core 4' RGBW 30x60", sales: 76797.00 },
 ];
 
-// Key YoY values for KPI calculations
-const EBITDA_2024 = -953185.16;
-const EBITDA_2025 = 1059431.01;
-const NET_INCOME_2024 = -1138149.23;
-const NET_INCOME_2025 = 849241.03;
-
-const formatYoYPercentText = (current, prior) => {
-  if (prior === 0) return 'N/A';
-  const pct = ((current - prior) / Math.abs(prior)) * 100;
-  const sign = pct >= 0 ? '+' : '';
-  return `${sign}${Math.round(pct)}%`;
-};
-
 // SALES REP DATA (aligned with 2024-2025 incentive register)
 const RAW_SALES_REP_DATA = [
   { name: "International Lights", sales2024: 560126.79, sales2025: 1729507.28, target: 1000000, targetHit: true, incentiveRate: 0.03, incentivePaid: 51885.22 },
@@ -245,12 +243,21 @@ const SALES_REP_DATA = RAW_SALES_REP_DATA
   })
   .sort((a, b) => b.sales2025 - a.sales2025);
 
+const REVENUE_PCT_DELTA = calculatePercentChange(TOTAL_REVENUE_2025, TOTAL_REVENUE_2024);
+const REVENUE_DOLLAR_DELTA = TOTAL_REVENUE_2025 - TOTAL_REVENUE_2024;
+const GROSS_MARGIN_PCT_DELTA = GROSS_MARGIN_2025 - GROSS_MARGIN_2024;
+const GROSS_PROFIT_DOLLAR_DELTA = GROSS_PROFIT_2025 - GROSS_PROFIT_2024;
+const EBITDA_PCT_DELTA = calculatePercentChange(EBITDA_2025, EBITDA_2024);
+const EBITDA_DOLLAR_DELTA = EBITDA_2025 - EBITDA_2024;
+const NET_INCOME_PCT_DELTA = calculatePercentChange(NET_INCOME_2025, NET_INCOME_2024);
+const NET_INCOME_DOLLAR_DELTA = NET_INCOME_2025 - NET_INCOME_2024;
+
 const KPI_CARDS = [
   {
     title: "Total Sales",
     category: "GROSS REVENUE",
     value: `$15.92M`,
-    subValue: `Vs 2024: +5.9%`,
+    subValue: formatDeltaLabel(REVENUE_PCT_DELTA, REVENUE_DOLLAR_DELTA),
     icon: DollarSign,
     color: "bg-blue-50 text-blue-700",
     status: "Growth",
@@ -260,7 +267,7 @@ const KPI_CARDS = [
     title: "Gross Margin",
     category: "GROSS MARGIN",
     value: `39.5%`,
-    subValue: `Vs 2024: +7.2%`,
+    subValue: formatDeltaLabel(GROSS_MARGIN_PCT_DELTA, GROSS_PROFIT_DOLLAR_DELTA),
     icon: Activity,
     color: "bg-emerald-50 text-emerald-700",
     status: "Strong",
@@ -270,7 +277,7 @@ const KPI_CARDS = [
     title: "EBITDA",
     category: "PROFITABILITY (EBITDA)",
     value: `$1.06M`,
-    subValue: `Vs 2024: ${formatYoYPercentText(EBITDA_2025, EBITDA_2024)}`,
+    subValue: formatDeltaLabel(EBITDA_PCT_DELTA, EBITDA_DOLLAR_DELTA),
     icon: TrendingUp,
     color: "bg-indigo-50 text-indigo-700",
     status: "Turnaround",
@@ -280,7 +287,7 @@ const KPI_CARDS = [
     title: "Net Income",
     category: "NET INCOME",
     value: `$849k`,
-    subValue: `Vs 2024: ${formatYoYPercentText(NET_INCOME_2025, NET_INCOME_2024)}`,
+    subValue: formatDeltaLabel(NET_INCOME_PCT_DELTA, NET_INCOME_DOLLAR_DELTA),
     icon: PieChart,
     color: "bg-amber-50 text-amber-700",
     status: "Positive",
@@ -306,6 +313,18 @@ export default function GMDashboard() {
     return `$${val.toFixed(0)}`;
   };
 
+const formatCompactCurrency = (value) => {
+  const abs = Math.abs(value);
+  if (abs >= 1000000) return `$${(abs / 1000000).toFixed(1)}M`;
+  if (abs >= 1000) return `$${(abs / 1000).toFixed(0)}k`;
+  return `$${abs.toFixed(0)}`;
+};
+
+const calculatePercentChange = (current, prior) => {
+  if (prior === 0) return 0;
+  return ((current - prior) / Math.abs(prior)) * 100;
+};
+
 const formatCurrencyWhole = (value) => {
   if (value === null || value === undefined) return '—';
   return `$${value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
@@ -329,8 +348,14 @@ const formatPercentWhole = (value) => {
   return `${Math.round(value)}%`;
 };
 
+const formatDeltaLabel = (percentValue, dollarDiff) => {
+  const pctText = `${percentValue >= 0 ? '+' : ''}${percentValue.toFixed(1)}%`;
+  const diffText = `${dollarDiff >= 0 ? '+' : '-'}${formatCompactCurrency(Math.abs(dollarDiff))}`;
+  return `Vs 2024: ${pctText} (${diffText})`;
+};
+
   // Total Revenue for Share Calc
-  const TOTAL_REVENUE = 15918450.52;
+  const TOTAL_REVENUE = TOTAL_REVENUE_2025;
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-slate-800 p-4 md:p-8">

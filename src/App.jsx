@@ -178,58 +178,59 @@ const TOP_PRODUCTS_DATA = [
   { rank: 20, sku: "XED-LXCV-OPXQ", desc: "Linear One DMX Ext Core 4' RGBW 30x60", sales: 76797.00 },
 ];
 
-// SALES REP DATA (All 47 Reps)
-const SALES_REP_DATA = [
-  { name: "Thomas Harris & Assoc", sales: 994712.30, commission: 99471.23 },
-  { name: "Michigan Lighting", sales: 425099.78, commission: 41004.13 },
-  { name: "PLP SoCal", sales: 321935.68, commission: 31847.07 },
-  { name: "Mercer-ZIMMERMAN", sales: 297698.82, commission: 28014.67 },
-  { name: "ARDD & Winter GA", sales: 250809.14, commission: 20136.74 },
-  { name: "Texas Lighting Sales", sales: 193402.12, commission: 18381.51 },
-  { name: "The Lighting Group", sales: 186936.37, commission: 18687.29 },
-  { name: "Arizona Lighting", sales: 152777.79, commission: 13623.38 },
-  { name: "Illuminations Inc", sales: 146107.94, commission: 14310.20 },
-  { name: "Lighting Dynamics", sales: 124142.79, commission: 12375.84 },
-  { name: "Five Lakes Marketing", sales: 116249.30, commission: 11624.93 },
-  { name: "Hossley Lighting", sales: 109375.43, commission: 8527.04 },
-  { name: "Peterson Scharck", sales: 106685.84, commission: 10297.98 },
-  { name: "Lighting Associates", sales: 102192.45, commission: 10144.25 },
-  { name: "R.L. Mlazgar", sales: 101919.26, commission: 9626.85 },
-  { name: "Eric Loader", sales: 100666.20, commission: 1006.66 },
-  { name: "Tampa Bay Lighting", sales: 89862.11, commission: 3300.82 },
-  { name: "JAW Lighting", sales: 75619.22, commission: 7561.92 },
-  { name: "M & J Lighting NJ", sales: 62941.35, commission: 6147.94 },
-  { name: "Freed Sales", sales: 47924.24, commission: 4442.02 },
-  { name: "Point Source Group", sales: 47161.00, commission: 3330.70 },
-  { name: "Lighting Solutions", sales: 39062.40, commission: 3724.84 },
-  { name: "CT Lighting Sales", sales: 37931.60, commission: 3304.56 },
-  { name: "The Lighting Digest", sales: 35449.95, commission: 2306.40 },
-  { name: "LDA Inc", sales: 32540.40, commission: 3254.04 },
-  { name: "Build 26", sales: 29468.22, commission: 2946.82 },
-  { name: "Lighting Partners", sales: 26769.00, commission: 2676.90 },
-  { name: "The Healy Group", sales: 24764.40, commission: 2270.54 },
-  { name: "OCS Lighting & Control", sales: 23913.00, commission: 1480.10 },
-  { name: "KB Stephens", sales: 22346.00, commission: 2234.60 },
-  { name: "Rimmer Lighting", sales: 22307.50, commission: 2230.75 },
-  { name: "Lighting Dynamics Ohio", sales: 20529.00, commission: 1954.99 },
-  { name: "Legacy Lighting", sales: 16189.00, commission: 1448.90 },
-  { name: "Chesapeake Lighting", sales: 15385.50, commission: 1538.55 },
-  { name: "John Thobe", sales: 13919.70, commission: 111.06 },
-  { name: "John Lopez", sales: 11280.00, commission: 225.60 },
-  { name: "SAJ Concepts", sales: 11121.20, commission: 1112.12 },
-  { name: "Sunburst Designs", sales: 9180.70, commission: 718.90 },
-  { name: "16500 Inc", sales: 7772.81, commission: 698.98 },
-  { name: "CM Buck", sales: 7078.00, commission: 707.80 },
-  { name: "2M Lighting", sales: 6568.35, commission: 656.84 },
-  { name: "Kraig Knight", sales: 4353.00, commission: 435.30 },
-  { name: "Miltwest", sales: 4292.00, commission: 0.00 },
-  { name: "Leesman Lighting", sales: 3919.20, commission: 391.92 },
-  { name: "Clear Advantage", sales: 3266.00, commission: 323.00 },
-  { name: "Audio Source Sales", sales: 2148.00, commission: 214.80 },
-  { name: "Skyline Arts", sales: 1477.80, commission: 147.78 },
-  { name: "RL Vanstory", sales: 1351.00, commission: 135.10 },
-  { name: "Crown Lighting Group", sales: 1023.00, commission: 102.30 },
-].sort((a, b) => b.sales - a.sales);
+// SALES REP DATA (aligned with 2024-2025 incentive register)
+const RAW_SALES_REP_DATA = [
+  { name: "International Light", sales2024: 560126.79, sales2025: 1729507.28, target: 1000000, targetHit: true, incentiveRate: 0.03, incentivePaid: 51885.22 },
+  { name: "Illuminations Inc", sales2024: 388619.22, sales2025: 1633259.70, target: 2400000, targetHit: false, incentiveRate: 0.02, incentivePaid: 32665.19 },
+  { name: "PSGI", sales2024: 0, sales2025: 1179292.86, target: 500000, targetHit: true, incentiveRate: 0.01, incentivePaid: 11792.93 },
+  { name: "Thomas Harris & Assoc", sales2024: 221878.74, sales2025: 1065334.29, target: 1200000, targetHit: false, incentiveRate: 0.02, incentivePaid: 21306.69 },
+  { name: "ALS Lighting", sales2024: 910542.74, sales2025: 529749.02, target: 400000, targetHit: true, incentiveRate: 0.01, incentivePaid: 5297.49 },
+  { name: "MLS East", sales2024: 223644.06, sales2025: 529192.64, target: 500000, targetHit: true, incentiveRate: 0.03, incentivePaid: 15875.78 },
+  { name: "The Lighting Group", sales2024: 53871.41, sales2025: 448137.60, target: 350000, targetHit: true, incentiveRate: 0.03, incentivePaid: 13444.13 },
+  { name: "PLP SoCal", sales2024: 254908.25, sales2025: 434088.97, target: 400000, targetHit: true, incentiveRate: 0.03, incentivePaid: 13022.67 },
+  { name: "Lighting Dynamics", sales2024: 557246.96, sales2025: 433308.23, target: 600000, targetHit: false, incentiveRate: null, incentivePaid: 0 },
+  { name: "Lighting Associates", sales2024: 589065.93, sales2025: 302455.96, target: null, targetHit: false, incentiveRate: null, incentivePaid: 0 },
+  { name: "Chesapeake Lighting", sales2024: 606322.99, sales2025: 301199.84, target: 600000, targetHit: false, incentiveRate: null, incentivePaid: 0 },
+  { name: "Lighting Partners", sales2024: 996779.78, sales2025: 205259.83, target: 500000, targetHit: false, incentiveRate: null, incentivePaid: 0 },
+  { name: "Mercer-ZIMMERMAN", sales2024: 306892.81, sales2025: 355656.80, target: 350000, targetHit: true, incentiveRate: 0.02, incentivePaid: 7113.14 },
+  { name: "R.L. Mlazgar", sales2024: 442203.18, sales2025: 461636.26, target: 575000, targetHit: false, incentiveRate: null, incentivePaid: 0 },
+  { name: "PSA", sales2024: 779612.72, sales2025: 571302.85, target: 400000, targetHit: true, incentiveRate: 0.01, incentivePaid: 5713.03 },
+  { name: "Texas Lighting Sales", sales2024: 469841.58, sales2025: 497371.67, target: 500000, targetHit: false, incentiveRate: null, incentivePaid: 0 },
+  { name: "Tampa Bay Lighting", sales2024: 454043.26, sales2025: 436043.44, target: 700000, targetHit: false, incentiveRate: null, incentivePaid: 0 },
+  { name: "ARDD & Winter GA", sales2024: 240711.99, sales2025: 840472.72, target: 800000, targetHit: true, incentiveRate: 0.03, incentivePaid: 25214.18 },
+  { name: "Lighting Dynamics Ohio", sales2024: 122913.11, sales2025: 87414.69, target: 30000, targetHit: true, incentiveRate: 0.01, incentivePaid: 874.15 },
+  { name: "JAW Lighting", sales2024: 0, sales2025: 83652.47, target: 250000, targetHit: false, incentiveRate: null, incentivePaid: 0 },
+  { name: "Hossley Lighting", sales2024: 74104.08, sales2025: 171686.47, target: 300000, targetHit: false, incentiveRate: 0.02, incentivePaid: 3433.73 },
+  { name: "Build 26", sales2024: 28393.56, sales2025: 142214.37, target: 150000, targetHit: false, incentiveRate: 0.02, incentivePaid: 2844.29 },
+  { name: "RL Vanstory", sales2024: 47030.00, sales2025: 118573.19, target: 300000, targetHit: false, incentiveRate: 0.02, incentivePaid: 2371.46 },
+  { name: "Crown Lighting Group", sales2024: 52560.00, sales2025: 83691.82, target: 300000, targetHit: false, incentiveRate: 0.02, incentivePaid: 1673.84 },
+  { name: "KB Stephens", sales2024: 100723.48, sales2025: 120749.35, target: 300000, targetHit: false, incentiveRate: 0.015, incentivePaid: 1811.24 },
+  { name: "2M Lighting", sales2024: 167134.65, sales2025: 157349.70, target: 225000, targetHit: false, incentiveRate: null, incentivePaid: 0 },
+  { name: "CT Lighting Sales", sales2024: 90073.83, sales2025: 96512.07, target: 250000, targetHit: false, incentiveRate: null, incentivePaid: 0 },
+  { name: "OCS Lighting & Control", sales2024: 338539.30, sales2025: 114015.34, target: 300000, targetHit: false, incentiveRate: null, incentivePaid: 0 },
+  { name: "Idaho Lighting", sales2024: 129640.94, sales2025: 10423.69, target: 100000, targetHit: false, incentiveRate: null, incentivePaid: 0 },
+  { name: "Legacy Lighting", sales2024: 41294.18, sales2025: 11675.74, target: 150000, targetHit: false, incentiveRate: null, incentivePaid: 0 },
+  { name: "Sunburst Designs", sales2024: 275479.00, sales2025: 27344.98, target: 275000, targetHit: false, incentiveRate: null, incentivePaid: 0 },
+  { name: "The Lighting Digest", sales2024: 325038.76, sales2025: 65369.42, target: 400000, targetHit: false, incentiveRate: null, incentivePaid: 0 },
+];
+
+const SALES_REP_DATA = RAW_SALES_REP_DATA
+  .map((rep) => {
+    const sales2024 = rep.sales2024 ?? 0;
+    const sales2025 = rep.sales2025 ?? 0;
+    const growthAmt = sales2025 - sales2024;
+    const growthPct = sales2024 > 0 ? (growthAmt / sales2024) * 100 : null;
+    return {
+      ...rep,
+      sales2024,
+      sales2025,
+      growthAmt,
+      growthPct,
+      incentiveRate: rep.incentiveRate ?? null,
+      incentivePaid: rep.incentivePaid ?? 0,
+    };
+  })
+  .sort((a, b) => b.sales2025 - a.sales2025);
 
 const KPI_CARDS = [
   {
@@ -291,6 +292,18 @@ export default function GMDashboard() {
     if (Math.abs(val) >= 1000) return `$${(val / 1000).toFixed(0)}k`;
     return `$${val.toFixed(0)}`;
   };
+
+const formatCurrencyWhole = (value) => {
+  if (value === null || value === undefined) return '—';
+  return `$${value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+};
+
+const formatSignedCurrency = (value) => {
+  if (value === null || value === undefined) return '—';
+  if (value === 0) return '$0';
+  const formatted = `$${Math.abs(value).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+  return value > 0 ? `+${formatted}` : `-${formatted}`;
+};
 
   // Total Revenue for Share Calc
   const TOTAL_REVENUE = 15918450.52;
@@ -807,19 +820,22 @@ export default function GMDashboard() {
         <>
           {/* SALES REPS CONTENT */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 h-full">
-            {/* Chart: Sales vs Commission - Limited to Top 20 */}
+            {/* Chart: 2024 vs 2025 performance */}
             <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 lg:col-span-3">
               <div className="flex justify-between items-center mb-6">
                 <div>
                   <h3 className="text-lg font-semibold text-slate-900">Sales Rep Performance (Top 20)</h3>
-                  <p className="text-slate-500 text-sm">Total Sales vs Commissions Earned</p>
+                  <p className="text-slate-500 text-sm">2025 actuals vs 2024 baseline with growth %</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 flex-wrap">
+                  <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-slate-100 text-slate-700 rounded-full border border-slate-200">
+                    <div className="w-2 h-2 rounded-full bg-slate-400"></div> 2024 Sales
+                  </div>
                   <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-blue-50 text-blue-700 rounded-full border border-blue-100">
-                    <div className="w-2 h-2 rounded-full bg-blue-500"></div> Sales Volume
+                    <div className="w-2 h-2 rounded-full bg-blue-500"></div> 2025 Sales
                   </div>
                   <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full border border-emerald-100">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500"></div> Commission
+                    <div className="w-2 h-2 rounded-full bg-emerald-500"></div> Growth %
                   </div>
                 </div>
               </div>
@@ -838,27 +854,44 @@ export default function GMDashboard() {
                       tick={{fontSize: 11, fill: '#64748b'}} 
                       height={80}
                     />
-                    <YAxis 
-                      yAxisId="left" 
-                      orientation="left" 
-                      tickFormatter={(val) => `$${val/1000}k`} 
-                      tick={{fontSize: 11, fill: '#64748b'}} 
-                      label={{ value: 'Total Sales', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#94a3b8', fontSize: 11 } }}
+                    <YAxis
+                      yAxisId="left"
+                      orientation="left"
+                      tickFormatter={(val) => `$${(val / 1000).toFixed(0)}k`}
+                      tick={{ fontSize: 11, fill: '#64748b' }}
+                      label={{ value: 'Sales ($)', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#94a3b8', fontSize: 11 } }}
                     />
-                    <YAxis 
-                      yAxisId="right" 
-                      orientation="right" 
-                      tickFormatter={(val) => `$${val/1000}k`} 
-                      tick={{fontSize: 11, fill: '#10B981'}} 
-                      label={{ value: 'Commission', angle: 90, position: 'insideRight', style: { textAnchor: 'middle', fill: '#10B981', fontSize: 11 } }}
+                    <YAxis
+                      yAxisId="right"
+                      orientation="right"
+                      tickFormatter={(val) => `${val}%`}
+                      tick={{ fontSize: 11, fill: '#10B981' }}
+                      label={{ value: 'Growth % vs 2024', angle: 90, position: 'insideRight', style: { textAnchor: 'middle', fill: '#10B981', fontSize: 11 } }}
+                      domain={['dataMin-10', 'dataMax+10']}
                     />
                     <Tooltip 
                       cursor={{fill: '#f8fafc'}}
                       contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0' }}
-                      formatter={(val, name) => [`$${val.toLocaleString()}`, name === 'sales' ? 'Total Sales' : 'Commission']}
+                      formatter={(val, name) => {
+                        if (name === 'sales2024' || name === 'sales2025') {
+                          return [
+                            `$${Number(val).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`,
+                            name === 'sales2024' ? '2024 Sales' : '2025 Sales'
+                          ];
+                        }
+                        if (name === 'growthPct') {
+                          return [
+                            val === null || val === undefined ? 'N/A' : `${val.toFixed(1)}%`,
+                            'Growth %'
+                          ];
+                        }
+                        return [val, name];
+                      }}
                     />
-                    <Bar yAxisId="left" dataKey="sales" fill="#3B82F6" radius={[4, 4, 0, 0]} barSize={30} />
-                    <Line yAxisId="right" type="monotone" dataKey="commission" stroke="#10B981" strokeWidth={2} dot={{r: 3, fill: "#10B981"}} />
+                    <Legend />
+                    <Bar yAxisId="left" dataKey="sales2024" name="2024 Sales" fill="#cbd5e1" radius={[4, 4, 0, 0]} barSize={24} />
+                    <Bar yAxisId="left" dataKey="sales2025" name="2025 Sales" fill="#3B82F6" radius={[4, 4, 0, 0]} barSize={24} />
+                    <Line yAxisId="right" type="monotone" dataKey="growthPct" name="Growth % vs 2024" stroke="#10B981" strokeWidth={2} dot={{ r: 3, fill: "#10B981" }} />
                   </ComposedChart>
                 </ResponsiveContainer>
               </div>
@@ -875,29 +908,53 @@ export default function GMDashboard() {
                     <tr>
                       <th className="px-6 py-3 w-12 text-center">Rank</th>
                       <th className="px-6 py-3 bg-slate-50">Rep Name</th>
-                      <th className="px-6 py-3 text-right bg-slate-50">Total Sales</th>
-                      <th className="px-6 py-3 text-right bg-slate-50">Commission Earned</th>
-                      <th className="px-6 py-3 text-right bg-slate-50">Comm %</th>
+                      <th className="px-6 py-3 text-right bg-slate-50">2024 Sales</th>
+                      <th className="px-6 py-3 text-right bg-slate-50">2025 Sales</th>
+                      <th className="px-6 py-3 text-right bg-slate-50">Δ Sales</th>
+                      <th className="px-6 py-3 text-right bg-slate-50">Δ %</th>
+                      <th className="px-6 py-3 text-right bg-slate-50">Target</th>
+                      <th className="px-6 py-3 text-center bg-slate-50">Hit Target</th>
+                      <th className="px-6 py-3 text-right bg-slate-50">Incentive %</th>
+                      <th className="px-6 py-3 text-right bg-slate-50">Payout</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {SALES_REP_DATA.map((rep, index) => {
-                      const commRate = (rep.commission / rep.sales) * 100;
-                      
+                      const growthPositive = rep.growthAmt >= 0;
+                      const growthBadge =
+                        rep.growthPct === null
+                          ? 'bg-slate-100 text-slate-500'
+                          : growthPositive
+                          ? 'bg-emerald-50 text-emerald-700'
+                          : 'bg-red-50 text-red-700';
+                      const targetBadge = rep.targetHit ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600';
                       return (
                         <tr key={index} className="hover:bg-slate-50 transition-colors">
                           <td className="px-6 py-4 text-center font-medium text-slate-400">#{index + 1}</td>
                           <td className="px-6 py-4 font-medium text-slate-900">{rep.name}</td>
-                          <td className="px-6 py-4 text-right font-mono text-slate-700">
-                            ${rep.sales.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-                          </td>
-                          <td className="px-6 py-4 text-right font-mono text-emerald-600">
-                            ${rep.commission.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                          <td className="px-6 py-4 text-right font-mono text-slate-600">{formatCurrencyWhole(rep.sales2024)}</td>
+                          <td className="px-6 py-4 text-right font-mono text-slate-900">{formatCurrencyWhole(rep.sales2025)}</td>
+                          <td className={`px-6 py-4 text-right font-mono ${growthPositive ? 'text-emerald-600' : 'text-red-600'}`}>
+                            {formatSignedCurrency(rep.growthAmt)}
                           </td>
                           <td className="px-6 py-4 text-right">
-                            <span className="inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-slate-100 text-slate-600">
-                              {commRate.toFixed(1)}%
+                            <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-semibold ${growthBadge}`}>
+                              {rep.growthPct === null ? 'N/A' : `${rep.growthPct.toFixed(1)}%`}
                             </span>
+                          </td>
+                          <td className="px-6 py-4 text-right font-mono text-slate-600">
+                            {rep.target ? formatCurrencyWhole(rep.target) : '—'}
+                          </td>
+                          <td className="px-6 py-4 text-center">
+                            <span className={`inline-flex px-2 py-1 rounded text-xs font-semibold ${targetBadge}`}>
+                              {rep.targetHit ? 'Yes' : 'No'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-right font-mono text-slate-600">
+                            {rep.incentiveRate !== null ? `${(rep.incentiveRate * 100).toFixed(2)}%` : '—'}
+                          </td>
+                          <td className="px-6 py-4 text-right font-mono text-emerald-600">
+                            {rep.incentivePaid > 0 ? formatCurrencyWhole(rep.incentivePaid) : '—'}
                           </td>
                         </tr>
                       );

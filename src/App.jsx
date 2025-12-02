@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { 
   TrendingUp, 
   DollarSign, 
@@ -110,6 +110,20 @@ const formatDeltaLabel = (percentValue, dollarDiff) => {
   const pctText = `${percentValue >= 0 ? '+' : ''}${percentValue.toFixed(1)}%`;
   const diffText = `${dollarDiff >= 0 ? '+' : '-'}${formatCompactCurrency(Math.abs(dollarDiff))}`;
   return `Vs 2024: ${pctText} (${diffText})`;
+};
+
+const SORT_TYPES = {
+  number: 'number',
+  text: 'text',
+};
+
+const compareValues = (a, b, type = SORT_TYPES.number) => {
+  const valA = a ?? (type === SORT_TYPES.text ? '' : 0);
+  const valB = b ?? (type === SORT_TYPES.text ? '' : 0);
+  if (type === SORT_TYPES.text) {
+    return valA.toString().localeCompare(valB.toString(), undefined, { sensitivity: 'base' });
+  }
+  return valA - valB;
 };
 
 // --- UPDATED CHART DATA ---
@@ -326,6 +340,81 @@ export default function GMDashboard() {
   const [passwordInput, setPasswordInput] = useState('');
   const [authError, setAuthError] = useState('');
 
+  const [salesRepSort, setSalesRepSort] = useState({
+    key: 'sales2025',
+    direction: 'desc',
+    type: SORT_TYPES.number,
+  });
+  const [customerSort, setCustomerSort] = useState({
+    key: 'value',
+    direction: 'desc',
+    type: SORT_TYPES.number,
+  });
+  const [productSort, setProductSort] = useState({
+    key: 'sales',
+    direction: 'desc',
+    type: SORT_TYPES.number,
+  });
+
+  const sortData = (data, sortState) => {
+    const sorted = [...data];
+    const { key, direction, type } = sortState;
+    sorted.sort((a, b) => {
+      const result = compareValues(a[key], b[key], type);
+      return direction === 'asc' ? result : -result;
+    });
+    return sorted;
+  };
+
+  const sortedSalesRepData = useMemo(
+    () => sortData(SALES_REP_DATA, salesRepSort),
+    [salesRepSort]
+  );
+  const TOTAL_REVENUE = TOTAL_REVENUE_2025;
+
+  const customersWithShare = useMemo(
+    () =>
+      TOP_CUSTOMERS_DATA.map((customer) => ({
+        ...customer,
+        share: (customer.value / TOTAL_REVENUE) * 100,
+      })),
+    [TOTAL_REVENUE]
+  );
+
+  const sortedCustomerData = useMemo(
+    () => sortData(customersWithShare, customerSort),
+    [customersWithShare, customerSort]
+  );
+  const productsWithShare = useMemo(
+    () =>
+      TOP_PRODUCTS_DATA.map((product) => ({
+        ...product,
+        share: (product.sales / TOTAL_REVENUE) * 100,
+      })),
+    [TOTAL_REVENUE]
+  );
+
+  const sortedProductData = useMemo(
+    () => sortData(productsWithShare, productSort),
+    [productsWithShare, productSort]
+  );
+
+  const updateSort = (setter) => (key, type = SORT_TYPES.number) => {
+    setter((prev) => {
+      if (prev.key === key) {
+        return {
+          ...prev,
+          direction: prev.direction === 'asc' ? 'desc' : 'asc',
+        };
+      }
+      return { key, direction: 'desc', type };
+    });
+  };
+
+  const handleSalesRepSort = updateSort(setSalesRepSort);
+  const handleCustomerSort = updateSort(setCustomerSort);
+  const handleProductSort = updateSort(setProductSort);
+
   useEffect(() => {
     if (!APP_PASSWORD) {
       setIsAuthenticated(true);
@@ -348,6 +437,12 @@ export default function GMDashboard() {
     }
     setAuthError('Incorrect password. Please try again.');
   };
+
+  const SortIndicator = ({ state, column }) => (
+    <span className="text-[10px] text-slate-400">
+      {state.key === column ? (state.direction === 'asc' ? '▲' : '▼') : '↕'}
+    </span>
+  );
 
   // Calculations for variance
   const calculateVariance = (current, prior, invertColor) => {
@@ -386,9 +481,6 @@ const formatPercentWhole = (value) => {
   if (value === null || value === undefined || Number.isNaN(value)) return 'N/A';
   return `${Math.round(value)}%`;
 };
-
-  // Total Revenue for Share Calc
-  const TOTAL_REVENUE = TOTAL_REVENUE_2025;
 
   if (!isAuthenticated) {
     return (
@@ -814,36 +906,59 @@ const formatPercentWhole = (value) => {
                   <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-100">
                     <tr>
                       <th className="px-6 py-3 w-12 text-center">Rank</th>
-                      <th className="px-6 py-3">Customer Name</th>
-                      <th className="px-6 py-3 text-right">Total Sales (2025)</th>
-                      <th className="px-6 py-3 text-right">% of Company Total Sales</th>
+                      <th className="px-6 py-3">
+                        <button
+                          type="button"
+                          onClick={() => handleCustomerSort('name', SORT_TYPES.text)}
+                          className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500"
+                        >
+                          Customer Name
+                          <SortIndicator state={customerSort} column="name" />
+                        </button>
+                      </th>
+                      <th className="px-6 py-3 text-right">
+                        <button
+                          type="button"
+                          onClick={() => handleCustomerSort('value')}
+                          className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500 justify-end w-full"
+                        >
+                          Total Sales (2025)
+                          <SortIndicator state={customerSort} column="value" />
+                        </button>
+                      </th>
+                      <th className="px-6 py-3 text-right">
+                        <button
+                          type="button"
+                          onClick={() => handleCustomerSort('share')}
+                          className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500 justify-end w-full"
+                        >
+                          % of Company Total Sales
+                          <SortIndicator state={customerSort} column="share" />
+                        </button>
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {TOP_CUSTOMERS_DATA.map((customer) => {
-                      const share = (customer.value / TOTAL_REVENUE) * 100;
-                      
-                      return (
-                        <tr key={customer.rank} className="hover:bg-slate-50 transition-colors">
-                          <td className="px-6 py-4 text-center font-medium text-slate-400">#{customer.rank}</td>
-                          <td className="px-6 py-4 font-medium text-slate-900">{customer.name}</td>
-                          <td className="px-6 py-4 text-right font-mono text-slate-700">
-                            ${customer.value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-                          </td>
-                          <td className="px-6 py-4 text-right">
-                            <div className="flex items-center justify-end gap-2">
-                              <span className="text-xs text-slate-500">{share.toFixed(1)}%</span>
-                              <div className="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                                <div 
-                                  className="h-full bg-blue-500 rounded-full" 
-                                  style={{ width: `${share * 4}%` }} 
-                                ></div>
-                              </div>
+                    {sortedCustomerData.map((customer, idx) => (
+                      <tr key={`${customer.name}-${customer.value}`} className="hover:bg-slate-50 transition-colors">
+                        <td className="px-6 py-4 text-center font-medium text-slate-400">#{idx + 1}</td>
+                        <td className="px-6 py-4 font-medium text-slate-900">{customer.name}</td>
+                        <td className="px-6 py-4 text-right font-mono text-slate-700">
+                          ${customer.value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <span className="text-xs text-slate-500">{customer.share.toFixed(1)}%</span>
+                            <div className="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                              <div 
+                                className="h-full bg-blue-500 rounded-full" 
+                                style={{ width: `${customer.share * 4}%` }} 
+                              ></div>
                             </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
               </div>
@@ -915,37 +1030,70 @@ const formatPercentWhole = (value) => {
                   <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-100">
                     <tr>
                       <th className="px-6 py-3 w-12 text-center">Rank</th>
-                      <th className="px-6 py-3">Product SKU</th>
-                      <th className="px-6 py-3">Description</th>
-                      <th className="px-6 py-3 text-right">Total Sales</th>
-                      <th className="px-6 py-3 text-right">% Total Sales</th>
+                      <th className="px-6 py-3">
+                        <button
+                          type="button"
+                          onClick={() => handleProductSort('sku', SORT_TYPES.text)}
+                          className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500"
+                        >
+                          Product SKU
+                          <SortIndicator state={productSort} column="sku" />
+                        </button>
+                      </th>
+                      <th className="px-6 py-3">
+                        <button
+                          type="button"
+                          onClick={() => handleProductSort('desc', SORT_TYPES.text)}
+                          className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500"
+                        >
+                          Description
+                          <SortIndicator state={productSort} column="desc" />
+                        </button>
+                      </th>
+                      <th className="px-6 py-3 text-right">
+                        <button
+                          type="button"
+                          onClick={() => handleProductSort('sales')}
+                          className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500 justify-end w-full"
+                        >
+                          Total Sales
+                          <SortIndicator state={productSort} column="sales" />
+                        </button>
+                      </th>
+                      <th className="px-6 py-3 text-right">
+                        <button
+                          type="button"
+                          onClick={() => handleProductSort('share')}
+                          className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500 justify-end w-full"
+                        >
+                          % Total Sales
+                          <SortIndicator state={productSort} column="share" />
+                        </button>
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {TOP_PRODUCTS_DATA.map((prod) => {
-                      const share = (prod.sales / TOTAL_REVENUE) * 100;
-                      return (
-                        <tr key={prod.rank} className="hover:bg-slate-50 transition-colors">
-                           <td className="px-6 py-4 text-center font-bold text-slate-400">#{prod.rank}</td>
-                           <td className="px-6 py-4 font-mono text-indigo-600 font-medium">{prod.sku}</td>
-                           <td className="px-6 py-4 text-slate-600">{prod.desc}</td>
-                           <td className="px-6 py-4 text-right font-medium text-slate-900">
-                             ${prod.sales.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-                           </td>
-                           <td className="px-6 py-4 text-right">
-                              <div className="flex items-center justify-end gap-2">
-                                <span className="text-xs text-slate-500">{share.toFixed(1)}%</span>
-                                <div className="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                                  <div 
-                                    className="h-full bg-indigo-500 rounded-full" 
-                                    style={{ width: `${share * 15}%` }} // Scale up for visibility
-                                  ></div>
-                                </div>
+                    {sortedProductData.map((prod, idx) => (
+                      <tr key={`${prod.sku}-${prod.sales}`} className="hover:bg-slate-50 transition-colors">
+                         <td className="px-6 py-4 text-center font-bold text-slate-400">#{idx + 1}</td>
+                         <td className="px-6 py-4 font-mono text-indigo-600 font-medium">{prod.sku}</td>
+                         <td className="px-6 py-4 text-slate-600">{prod.desc}</td>
+                         <td className="px-6 py-4 text-right font-medium text-slate-900">
+                           ${prod.sales.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+                         </td>
+                         <td className="px-6 py-4 text-right">
+                            <div className="flex items-center justify-end gap-2">
+                              <span className="text-xs text-slate-500">{prod.share.toFixed(1)}%</span>
+                              <div className="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                                <div 
+                                  className="h-full bg-indigo-500 rounded-full" 
+                                  style={{ width: `${prod.share * 15}%` }} // Scale up for visibility
+                                ></div>
                               </div>
-                           </td>
-                        </tr>
-                      )
-                    })}
+                            </div>
+                         </td>
+                      </tr>
+                    ))}
                   </tbody>
                 </table>
              </div>
@@ -1043,17 +1191,80 @@ const formatPercentWhole = (value) => {
                   <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-100">
                     <tr>
                       <th className="px-6 py-3 w-12 text-center">Rank</th>
-                      <th className="px-6 py-3 bg-slate-50">Rep Name</th>
-                      <th className="px-6 py-3 text-right bg-slate-50">2024 Sales</th>
-                      <th className="px-6 py-3 text-right bg-slate-50">2025 Sales</th>
-                      <th className="px-6 py-3 text-right bg-slate-50">Δ Sales</th>
-                      <th className="px-6 py-3 text-right bg-slate-50">Δ %</th>
-                      <th className="px-6 py-3 text-right bg-slate-50">Target</th>
-                      <th className="px-6 py-3 text-center bg-slate-50">Hit Target</th>
+                      <th className="px-6 py-3 bg-slate-50">
+                        <button
+                          type="button"
+                          onClick={() => handleSalesRepSort('name', SORT_TYPES.text)}
+                          className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500 w-full justify-start"
+                        >
+                          Rep Name
+                          <SortIndicator state={salesRepSort} column="name" />
+                        </button>
+                      </th>
+                      <th className="px-6 py-3 text-right bg-slate-50">
+                        <button
+                          type="button"
+                          onClick={() => handleSalesRepSort('sales2024')}
+                          className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500 w-full justify-end"
+                        >
+                          2024 Sales
+                          <SortIndicator state={salesRepSort} column="sales2024" />
+                        </button>
+                      </th>
+                      <th className="px-6 py-3 text-right bg-slate-50">
+                        <button
+                          type="button"
+                          onClick={() => handleSalesRepSort('sales2025')}
+                          className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500 w-full justify-end"
+                        >
+                          2025 Sales
+                          <SortIndicator state={salesRepSort} column="sales2025" />
+                        </button>
+                      </th>
+                      <th className="px-6 py-3 text-right bg-slate-50">
+                        <button
+                          type="button"
+                          onClick={() => handleSalesRepSort('growthAmt')}
+                          className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500 w-full justify-end"
+                        >
+                          Δ Sales
+                          <SortIndicator state={salesRepSort} column="growthAmt" />
+                        </button>
+                      </th>
+                      <th className="px-6 py-3 text-right bg-slate-50">
+                        <button
+                          type="button"
+                          onClick={() => handleSalesRepSort('growthPct')}
+                          className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500 w-full justify-end"
+                        >
+                          Δ %
+                          <SortIndicator state={salesRepSort} column="growthPct" />
+                        </button>
+                      </th>
+                      <th className="px-6 py-3 text-right bg-slate-50">
+                        <button
+                          type="button"
+                          onClick={() => handleSalesRepSort('target')}
+                          className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500 w-full justify-end"
+                        >
+                          Target
+                          <SortIndicator state={salesRepSort} column="target" />
+                        </button>
+                      </th>
+                      <th className="px-6 py-3 text-center bg-slate-50">
+                        <button
+                          type="button"
+                          onClick={() => handleSalesRepSort('targetHit', SORT_TYPES.text)}
+                          className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500 w-full justify-center"
+                        >
+                          Hit Target
+                          <SortIndicator state={salesRepSort} column="targetHit" />
+                        </button>
+                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {SALES_REP_DATA.map((rep, index) => {
+                    {sortedSalesRepData.map((rep, index) => {
                       const growthPositive = rep.growthAmt >= 0;
                       const isGrowthNa = rep.growthPct === null || Number.isNaN(rep.growthPct);
                       const growthBadge = isGrowthNa

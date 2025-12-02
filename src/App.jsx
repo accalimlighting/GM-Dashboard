@@ -70,7 +70,7 @@ const YOY_DATA = [
       { name: "Advertising", y2024: 237228.70, y2025: 215148.76, format: "currency", invertColor: true },
       { name: "R&D", y2024: 111337.39, y2025: 75009.88, format: "currency", invertColor: true },
       { name: "Trade Shows", y2024: 107151.52, y2025: 62489.51, format: "currency", invertColor: true },
-      { name: "Travel (Product)", y2024: 165997.20, y2025: 198566.72, format: "currency", invertColor: true },
+      { name: "Travel", y2024: 165997.20, y2025: 198566.72, format: "currency", invertColor: true },
     ]
   }
 ];

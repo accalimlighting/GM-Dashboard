@@ -178,6 +178,19 @@ const TOP_PRODUCTS_DATA = [
   { rank: 20, sku: "XED-LXCV-OPXQ", desc: "Linear One DMX Ext Core 4' RGBW 30x60", sales: 76797.00 },
 ];
 
+// Key YoY values for KPI calculations
+const EBITDA_2024 = -953185.16;
+const EBITDA_2025 = 1059431.01;
+const NET_INCOME_2024 = -1138149.23;
+const NET_INCOME_2025 = 849241.03;
+
+const formatYoYPercentText = (current, prior) => {
+  if (prior === 0) return 'N/A';
+  const pct = ((current - prior) / Math.abs(prior)) * 100;
+  const sign = pct >= 0 ? '+' : '';
+  return `${sign}${Math.round(pct)}%`;
+};
+
 // SALES REP DATA (aligned with 2024-2025 incentive register)
 const RAW_SALES_REP_DATA = [
   { name: "International Lights", sales2024: 560126.79, sales2025: 1729507.28, target: 1000000, targetHit: true, incentiveRate: 0.03, incentivePaid: 51885.22 },
@@ -257,7 +270,7 @@ const KPI_CARDS = [
     title: "EBITDA",
     category: "PROFITABILITY (EBITDA)",
     value: `$1.06M`,
-    subValue: `Vs 2024: +$2.0M`,
+    subValue: `Vs 2024: ${formatYoYPercentText(EBITDA_2025, EBITDA_2024)}`,
     icon: TrendingUp,
     color: "bg-indigo-50 text-indigo-700",
     status: "Turnaround",
@@ -267,7 +280,7 @@ const KPI_CARDS = [
     title: "Net Income",
     category: "NET INCOME",
     value: `$849k`,
-    subValue: `Vs 2024: Loss ($1.1M)`,
+    subValue: `Vs 2024: ${formatYoYPercentText(NET_INCOME_2025, NET_INCOME_2024)}`,
     icon: PieChart,
     color: "bg-amber-50 text-amber-700",
     status: "Positive",

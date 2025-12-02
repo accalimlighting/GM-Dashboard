@@ -91,6 +91,24 @@ const EBITDA_2025 = 1059431.01;
 const NET_INCOME_2024 = -1138149.23;
 const NET_INCOME_2025 = 849241.03;
 
+const formatCompactCurrency = (value) => {
+  const abs = Math.abs(value);
+  if (abs >= 1000000) return `$${(abs / 1000000).toFixed(1)}M`;
+  if (abs >= 1000) return `$${(abs / 1000).toFixed(0)}k`;
+  return `$${abs.toFixed(0)}`;
+};
+
+const calculatePercentChange = (current, prior) => {
+  if (prior === 0) return 0;
+  return ((current - prior) / Math.abs(prior)) * 100;
+};
+
+const formatDeltaLabel = (percentValue, dollarDiff) => {
+  const pctText = `${percentValue >= 0 ? '+' : ''}${percentValue.toFixed(1)}%`;
+  const diffText = `${dollarDiff >= 0 ? '+' : '-'}${formatCompactCurrency(Math.abs(dollarDiff))}`;
+  return `Vs 2024: ${pctText} (${diffText})`;
+};
+
 // --- UPDATED CHART DATA ---
 
 // 1. REVENUE ALLOCATION PIE
@@ -313,18 +331,6 @@ export default function GMDashboard() {
     return `$${val.toFixed(0)}`;
   };
 
-const formatCompactCurrency = (value) => {
-  const abs = Math.abs(value);
-  if (abs >= 1000000) return `$${(abs / 1000000).toFixed(1)}M`;
-  if (abs >= 1000) return `$${(abs / 1000).toFixed(0)}k`;
-  return `$${abs.toFixed(0)}`;
-};
-
-const calculatePercentChange = (current, prior) => {
-  if (prior === 0) return 0;
-  return ((current - prior) / Math.abs(prior)) * 100;
-};
-
 const formatCurrencyWhole = (value) => {
   if (value === null || value === undefined) return '—';
   return `$${value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
@@ -346,12 +352,6 @@ const formatSignedCurrency = (value) => {
 const formatPercentWhole = (value) => {
   if (value === null || value === undefined || Number.isNaN(value)) return 'N/A';
   return `${Math.round(value)}%`;
-};
-
-const formatDeltaLabel = (percentValue, dollarDiff) => {
-  const pctText = `${percentValue >= 0 ? '+' : ''}${percentValue.toFixed(1)}%`;
-  const diffText = `${dollarDiff >= 0 ? '+' : '-'}${formatCompactCurrency(Math.abs(dollarDiff))}`;
-  return `Vs 2024: ${pctText} (${diffText})`;
 };
 
   // Total Revenue for Share Calc

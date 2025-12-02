@@ -311,6 +311,12 @@ const formatCurrencyWhole = (value) => {
   return `$${value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 };
 
+const formatCurrencyFull = (value) => {
+  if (value === null || value === undefined || Number.isNaN(value)) return '—';
+  const abs = Math.abs(value).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+  return value < 0 ? `-$${abs}` : `$${abs}`;
+};
+
 const formatSignedCurrency = (value) => {
   if (value === null || value === undefined) return '—';
   if (value === 0) return '$0';
@@ -437,6 +443,16 @@ const formatPercentWhole = (value) => {
                     <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{fill: '#10B981'}} tickFormatter={(val) => `${val}%`} />
                     <Tooltip 
                       contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0' }}
+                      formatter={(value, name, props) => {
+                        const key = props?.dataKey;
+                        if (key === 'sales' || key === 'ebitda') {
+                          return [formatCurrencyFull(value), key === 'sales' ? 'Revenue' : 'EBITDA'];
+                        }
+                        if (key === 'marginPct') {
+                          return [`${value.toFixed(1)}%`, 'Margin %'];
+                        }
+                        return [value, name];
+                      }}
                     />
                     <Legend />
                     <Bar yAxisId="left" dataKey="sales" name="Revenue" fill="#3B82F6" radius={[4, 4, 0, 0]} barSize={40} />
@@ -503,6 +519,16 @@ const formatPercentWhole = (value) => {
                     <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{fill: '#4F46E5'}} domain={[0, 10]} />
                     <Tooltip 
                       contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0' }}
+                      formatter={(value, name, props) => {
+                        const key = props?.dataKey;
+                        if (key === 'labor') {
+                          return [formatCurrencyFull(value), 'Total Labor Cost'];
+                        }
+                        if (key === 'ratio') {
+                          return [`${value.toFixed(2)}x`, 'Efficiency Ratio'];
+                        }
+                        return [value, name];
+                      }}
                     />
                     <Legend />
                     <Bar yAxisId="left" dataKey="labor" name="Total Labor Cost" fill="#94A3B8" radius={[4, 4, 0, 0]} barSize={50} />
@@ -890,14 +916,15 @@ const formatPercentWhole = (value) => {
                     <Tooltip 
                       cursor={{fill: '#f8fafc'}}
                       contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0' }}
-                      formatter={(val, name) => {
-                        if (name === 'sales2024' || name === 'sales2025') {
+                      formatter={(val, name, props) => {
+                        const key = props?.dataKey;
+                        if (key === 'sales2024' || key === 'sales2025') {
                           return [
-                            `$${Number(val).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`,
-                            name === 'sales2024' ? '2024 Sales' : '2025 Sales'
+                            formatCurrencyFull(val),
+                            key === 'sales2024' ? '2024 Sales' : '2025 Sales'
                           ];
                         }
-                        if (name === 'growthPct') {
+                        if (key === 'growthPct') {
                           return [
                             formatPercentWhole(val),
                             'Growth %'

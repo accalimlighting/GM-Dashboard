@@ -438,9 +438,9 @@ export default function GMDashboard() {
     setAuthError('Incorrect password. Please try again.');
   };
 
-  const SortIndicator = ({ state, column }) => (
+  const SortIndicator = ({ state, column, defaultDirection = 'desc' }) => (
     <span className="text-[10px] text-slate-400">
-      {state.key === column ? (state.direction === 'asc' ? '▲' : '▼') : '↕'}
+      {state.key === column ? (state.direction === 'asc' ? '▲' : '▼') : defaultDirection === 'asc' ? '▲' : '▼'}
     </span>
   );
 

@@ -369,10 +369,7 @@ const formatPercentWhole = (value) => {
           </div>
           <div className="flex-grow"></div>
           <div className="flex items-center gap-2">
-            <p className="text-slate-500 text-sm text-right">
-               <span className="block font-semibold text-slate-900">Fiscal Year 2025 (Final)</span>
-               <span className="block text-xs">General Manager View</span>
-            </p>
+            <p className="text-slate-900 text-sm font-semibold">Fiscal Year 2025</p>
           </div>
         </div>
         

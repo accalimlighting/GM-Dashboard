@@ -488,7 +488,7 @@ const formatPercentWhole = (value) => {
         <div className="bg-white border border-slate-200 shadow-lg rounded-2xl p-8 max-w-md w-full">
           <div className="text-center mb-6">
             <img src="/acclaim_logo.svg" alt="Acclaim Lighting" className="h-10 mx-auto mb-4" />
-            <h1 className="text-xl font-semibold text-slate-900">Acclaim GM Dashboard</h1>
+            <h1 className="text-xl font-semibold text-slate-900">Metrics Dashboard</h1>
             <p className="text-sm text-slate-500 mt-1">Enter the access password to continue.</p>
           </div>
           <form onSubmit={handlePasswordSubmit} className="space-y-4">

@@ -161,6 +161,14 @@ export default function GMDashboard() {
     return `$${val.toFixed(0)}`;
   };
 
+  const formatDelta = (val, type) => {
+    if (val === 0) return type === 'percent' ? '0.0%' : '$0';
+    const sign = val > 0 ? '+' : '-';
+    const absVal = Math.abs(val);
+    if (type === 'percent') return `${sign}${absVal.toFixed(1)}%`;
+    return `${sign}${formatValue(absVal, 'currency')}`;
+  };
+
   const repRows = SALES_REP_YOY.map((rep) => {
     const yoy = rep.y2025 - rep.y2024;
     const yoyPct = rep.y2024 === 0 ? 100 : (yoy / rep.y2024) * 100;
@@ -171,40 +179,40 @@ export default function GMDashboard() {
 
   const kpiCards = [
     {
-      title: "Total Sales",
+      title: "GROSS REVENUE",
       category: "Revenue",
       value: formatValue(TOTAL_SALES_2025, "currency"),
-      subValue: `Vs 2024: ${((TOTAL_SALES_2025 - TOTAL_SALES_2024) / TOTAL_SALES_2024 * 100).toFixed(1)}%`,
+      subValue: `Vs 2024: ${formatDelta(TOTAL_SALES_2025 - TOTAL_SALES_2024, 'currency')}`,
       icon: DollarSign,
       color: "bg-blue-50 text-blue-700",
       status: "Growth",
       statusColor: "bg-green-100 text-green-800"
     },
     {
-      title: "Gross Margin",
+      title: "GROSS MARGIN",
       category: "Efficiency",
       value: `39.5%`,
-      subValue: `Vs 2024: +7.2%`,
+      subValue: `Vs 2024: ${formatDelta(39.5 - 32.3, 'percent')}`,
       icon: Activity,
       color: "bg-emerald-50 text-emerald-700",
       status: "Strong",
       statusColor: "bg-green-100 text-green-800"
     },
     {
-      title: "EBITDA",
+      title: "PROFITABILITY (EBITDA)",
       category: "Profitability",
       value: formatValue(635229.78, "currency"),
-      subValue: `Vs 2024: ${formatValue(635229.78 - (-953185.16), "currency")}`,
+      subValue: `Vs 2024: ${formatDelta(635229.78 - (-953185.16), "currency")}`,
       icon: TrendingUp,
       color: "bg-indigo-50 text-indigo-700",
       status: "Turnaround",
       statusColor: "bg-green-100 text-green-800"
     },
     {
-      title: "Net Income",
+      title: "NET INCOME",
       category: "Bottom Line",
       value: formatValue(386450.37, "currency"),
-      subValue: `Vs 2024: ${formatValue(386450.37 - (-1138149.23), "currency")}`,
+      subValue: `Vs 2024: ${formatDelta(386450.37 - (-1138149.23), "currency")}`,
       icon: PieChart,
       color: "bg-amber-50 text-amber-700",
       status: "Positive",

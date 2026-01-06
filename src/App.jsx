@@ -1194,6 +1194,17 @@ const formatPercentWhole = (value) => {
                   <h3 className="text-lg font-semibold text-slate-900">Sales Rep Performance (Top 20)</h3>
                   <p className="text-slate-500 text-sm">2025 actuals vs 2024 baseline with growth %</p>
                 </div>
+                <div className="flex gap-2 flex-wrap">
+                  <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-slate-100 text-slate-700 rounded-full border border-slate-200">
+                    <div className="w-2 h-2 rounded-full bg-slate-400"></div> 2024 Sales
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-blue-50 text-blue-700 rounded-full border border-blue-100">
+                    <div className="w-2 h-2 rounded-full bg-blue-500"></div> 2025 Sales
+                  </div>
+                  <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full border border-emerald-100">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500"></div> Growth %
+                  </div>
+                </div>
               </div>
               <div className="h-[320px] sm:h-[400px] lg:h-[500px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
@@ -1245,7 +1256,6 @@ const formatPercentWhole = (value) => {
                         return [val, name];
                       }}
                     />
-                    <Legend />
                     <Bar yAxisId="left" dataKey="sales2024" name="2024 Sales" fill="#cbd5e1" radius={[4, 4, 0, 0]} barSize={24} />
                     <Bar yAxisId="left" dataKey="sales2025" name="2025 Sales" fill="#3B82F6" radius={[4, 4, 0, 0]} barSize={24} />
                     <Line yAxisId="right" type="monotone" dataKey="growthPct" name="Growth % vs 2024" stroke="#10B981" strokeWidth={2} dot={{ r: 3, fill: "#10B981" }} />

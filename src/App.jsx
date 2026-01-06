@@ -1271,7 +1271,7 @@ const formatPercentWhole = (value) => {
               <div
                 className="relative rounded-xl border border-slate-200 p-4 overflow-hidden min-h-[260px]"
                 style={{
-                  backgroundImage: "url('/shutterstock_400839148.eps')",
+                  backgroundImage: "url('/mapppAsset3.svg')",
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                 }}

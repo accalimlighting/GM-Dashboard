@@ -226,37 +226,48 @@ const TOP_PRODUCTS_DATA = [
 
 // SALES REP DATA (final 2024/2025; targets not provided)
 const RAW_SALES_REP_DATA = [
-  { name: "Illuminations (ALILLU610)", sales2024: 383443.18, sales2025: 1703977.50 },
-  { name: "PSGI", sales2024: 0, sales2025: 1204452.26 },
-  { name: "ARDD & Winter (ALARDD770)", sales2024: 201406.39, sales2025: 897206.96 },
-  { name: "RL (ALMLAZ952)", sales2024: 403497.07, sales2025: 498543.28 },
-  { name: "Texas Lighting (ALTEXA817)", sales2024: 426362.16, sales2025: 476264.33 },
-  { name: "LG Northwest (ALLIGH206)", sales2024: 27964.06, sales2025: 481317.44 },
-  { name: "PLP SoCal (ALPLPS213)", sales2024: 261604.05, sales2025: 434709.37 },
-  { name: "PSA Lighting (ALPSAL713)", sales2024: 789732.86, sales2025: 462718.31 },
-  { name: "Omnilite (ALILLU781)", sales2024: 580931.91, sales2025: 442999.96 },
-  { name: "ITL Light (ALINTE212)", sales2024: 654544.46, sales2025: 365679.51 },
-  { name: "Arizona Lighting (ALSI602)", sales2024: 913332.72, sales2025: 286516.27 },
-  { name: "Chesapeake (ALCHES301)", sales2024: 598764.11, sales2025: 205029.81 },
-  { name: "Tampa Bay (ALTAMP813)", sales2024: 632319.78, sales2025: 202567.54 },
-  { name: "Clear Advantage", sales2024: 148902.66, sales2025: 145656.44 },
-  { name: "The Lighting Digest (ALTLDL630)", sales2024: 261534.16, sales2025: 70213.85 },
-  { name: "Build 26", sales2024: 101052.30, sales2025: 64968.62 },
-  { name: "CT Lighting (ALCTLI303)", sales2024: 88279.98, sales2025: 79760.25 },
-  { name: "Legacy Lighting (ALLEGA512)", sales2024: 36721.67, sales2025: 79272.11 },
-  { name: "KB Stephens (ALKBST919)", sales2024: 52297.36, sales2025: 105812.36 },
-  { name: "Thomas", sales2024: 45589.07, sales2025: 141582.81 },
-  { name: "2M Light (AL2MLI210)", sales2024: 142150.06, sales2025: 140866.39 },
-  { name: "16500", sales2024: 72538.35, sales2025: 39234.20 },
-  { name: "OCS Light (ALOCSL858)", sales2024: 350176.09, sales2025: 48745.36 },
-  { name: "Sunburst (ALSUNB808)", sales2024: 275777.15, sales2025: 45022.63 },
-  { name: "MLS West (ALMLSW)", sales2024: 102364.19, sales2025: 76817.14 },
-  { name: "RL Vanstory", sales2024: 129956.89, sales2025: 31653.20 },
-  { name: "Crown", sales2024: 53421.00, sales2025: 1897.82 },
-  { name: "FRM Lighting", sales2024: 0, sales2025: 1672.92 },
-  { name: "Idaho", sales2024: 5505.04, sales2025: 4575.94 },
-  { name: "Hawaii", sales2024: 0, sales2025: 0 },
-  { name: "NWLC (ALNWLC503)", sales2024: 14304.81, sales2025: 0 },
+  { name: "16500", sales2024: 72538.35, sales2025: 39234.20, territory: "USA West" },
+  { name: "2M LIGHT (AL2MLI210)", sales2024: 142150.06, sales2025: 140866.39, territory: "USA West" },
+  { name: "ARIZONA LIGHT (ALSI602)", sales2024: 913332.72, sales2025: 286516.27, territory: "USA West" },
+  { name: "BUILD 26", sales2024: 101052.30, sales2025: 64968.62, territory: "USA West" },
+  { name: "CT LIGHTING (ALCTLI303)", sales2024: 88279.98, sales2025: 79760.25, territory: "USA West" },
+  { name: "IDAHO", sales2024: 5505.04, sales2025: 4575.94, territory: "USA West" },
+  { name: "LEGACY LTG (ALLEGA512)", sales2024: 36721.67, sales2025: 79272.11, territory: "USA West" },
+  { name: "LGNW (ALLIGH206)", sales2024: 27964.06, sales2025: 481317.44, territory: "USA West" },
+  { name: "OCS LIGHT (ALOCSL858)", sales2024: 350176.09, sales2025: 48745.36, territory: "USA West" },
+  { name: "PLP SOCAL (ALPLPS213)", sales2024: 261604.05, sales2025: 434709.37, territory: "USA West" },
+  { name: "PSA LIGHT (ALPSAL713)", sales2024: 789732.86, sales2025: 462718.31, territory: "USA West" },
+  { name: "SUNBURST (ALSUNB808)", sales2024: 275777.15, sales2025: 45022.63, territory: "USA West" },
+  { name: "TEXAS LIGHTI (ALTEXA817)", sales2024: 426362.16, sales2025: 476264.33, territory: "USA West" },
+  { name: "CLEAR ADVANTAGE", sales2024: 148902.66, sales2025: 145656.44, territory: "USA Central" },
+  { name: "CM BUCK (ALCMBU317)", sales2024: 135286.34, sales2025: 66413.55, territory: "USA Central" },
+  { name: "HOSSLEY (ALHOSS214)", sales2024: 64937.00, sales2025: 336807.40, territory: "USA Central" },
+  { name: "JAW LIGHTING", sales2024: 562.09, sales2025: 122238.24, territory: "USA Central" },
+  { name: "LDI OHIO (ALLDIO330)", sales2024: 72643.44, sales2025: 57075.36, territory: "USA Central" },
+  { name: "LD INC. (ALLIGH954)", sales2024: 565454.18, sales2025: 478038.77, territory: "USA Central" },
+  { name: "LDA PR", sales2024: 0, sales2025: 46325.60, territory: "USA Central" },
+  { name: "LEESMAN", sales2024: 0, sales2025: 29660.74, territory: "USA Central" },
+  { name: "LIGHT ASSOC.", sales2024: 583284.28, sales2025: 297177.78, territory: "USA Central" },
+  { name: "LIGHT SOLUTI (ALLIGH205)", sales2024: 252185.93, sales2025: 242782.73, territory: "USA Central" },
+  { name: "LIGHT PARTNERS (ALLIGH852)", sales2024: 904886.19, sales2025: 191681.19, territory: "USA Central" },
+  { name: "LIGHT TREND (ALLIGH865)", sales2024: 5470.10, sales2025: 70903.43, territory: "USA Central" },
+  { name: "MERCER (ALMERC913)", sales2024: 304302.09, sales2025: 435873.81, territory: "USA Central" },
+  { name: "MLS EAST (ALMLSE248)", sales2024: 212126.48, sales2025: 307317.79, territory: "USA Central" },
+  { name: "MLS WEST (ALMLSW??)", sales2024: 102364.19, sales2025: 76817.14, territory: "USA Central" },
+  { name: "RL (ALMLAZ952)", sales2024: 403497.07, sales2025: 498543.28, territory: "USA Central" },
+  { name: "TAMPA BAY (ALTAMP813)", sales2024: 632319.78, sales2025: 202567.54, territory: "USA Central" },
+  { name: "THE LIGHTING DIGEST (ALTLDL630)", sales2024: 261534.16, sales2025: 70213.85, territory: "USA Central" },
+  { name: "ARDD&WINTER (ALARDD770)", sales2024: 201406.39, sales2025: 897206.96, territory: "USA East" },
+  { name: "CROWN", sales2024: 53421.00, sales2025: 1897.82, territory: "USA East" },
+  { name: "CHESAPEAKE (ALCHES301)", sales2024: 598764.11, sales2025: 205029.81, territory: "USA East" },
+  { name: "FRM LIGHTING", sales2024: 0, sales2025: 1672.92, territory: "USA East" },
+  { name: "ILLUMINATIONS (ALILLU610)", sales2024: 383443.18, sales2025: 1703977.50, territory: "USA East" },
+  { name: "ITL LIGHT (ALINTE212)", sales2024: 654544.46, sales2025: 365679.51, territory: "USA East" },
+  { name: "KB STEPHENS (ALKBST919)", sales2024: 52297.36, sales2025: 105812.36, territory: "USA East" },
+  { name: "OMNILITE (ALILLU781)", sales2024: 580931.91, sales2025: 442999.96, territory: "USA East" },
+  { name: "PSGI", sales2024: 0, sales2025: 1204452.26, territory: "USA East" },
+  { name: "RL VANSTORY", sales2024: 129956.89, sales2025: 31653.20, territory: "USA East" },
+  { name: "THOMAS", sales2024: 45589.07, sales2025: 141582.81, territory: "USA East" },
 ].filter((rep) => rep.sales2025 > 0).map((rep) => ({ ...rep, target: null, targetHit: false, incentiveRate: null, incentivePaid: 0 }));
 
 const SALES_REP_DATA = RAW_SALES_REP_DATA
@@ -276,6 +287,23 @@ const SALES_REP_DATA = RAW_SALES_REP_DATA
     };
   })
   .sort((a, b) => b.sales2025 - a.sales2025);
+
+const REGION_SUMMARY = (() => {
+  const base = { 'USA West': { sales2024: 0, sales2025: 0 }, 'USA Central': { sales2024: 0, sales2025: 0 }, 'USA East': { sales2024: 0, sales2025: 0 } };
+  SALES_REP_DATA.forEach((rep) => {
+    const bucket = base[rep.territory];
+    if (bucket) {
+      bucket.sales2024 += rep.sales2024;
+      bucket.sales2025 += rep.sales2025;
+    }
+  });
+  return Object.entries(base).map(([territory, vals]) => {
+    const growthAmt = vals.sales2025 - vals.sales2024;
+    const growthPct = vals.sales2024 > 0 ? (growthAmt / vals.sales2024) * 100 : null;
+    const label = territory.replace('USA ', '');
+    return { territory, label, ...vals, growthAmt, growthPct };
+  });
+})();
 
 const REVENUE_PCT_DELTA = calculatePercentChange(TOTAL_REVENUE_2025, TOTAL_REVENUE_2024);
 const REVENUE_DOLLAR_DELTA = TOTAL_REVENUE_2025 - TOTAL_REVENUE_2024;
@@ -1166,17 +1194,6 @@ const formatPercentWhole = (value) => {
                   <h3 className="text-lg font-semibold text-slate-900">Sales Rep Performance (Top 20)</h3>
                   <p className="text-slate-500 text-sm">2025 actuals vs 2024 baseline with growth %</p>
                 </div>
-                <div className="flex gap-2 flex-wrap">
-                  <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-slate-100 text-slate-700 rounded-full border border-slate-200">
-                    <div className="w-2 h-2 rounded-full bg-slate-400"></div> 2024 Sales
-                  </div>
-                  <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-blue-50 text-blue-700 rounded-full border border-blue-100">
-                    <div className="w-2 h-2 rounded-full bg-blue-500"></div> 2025 Sales
-                  </div>
-                  <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full border border-emerald-100">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500"></div> Growth %
-                  </div>
-                </div>
               </div>
               <div className="h-[320px] sm:h-[400px] lg:h-[500px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
@@ -1234,6 +1251,35 @@ const formatPercentWhole = (value) => {
                     <Line yAxisId="right" type="monotone" dataKey="growthPct" name="Growth % vs 2024" stroke="#10B981" strokeWidth={2} dot={{ r: 3, fill: "#10B981" }} />
                   </ComposedChart>
                 </ResponsiveContainer>
+              </div>
+            </div>
+
+            {/* Region map + rollup */}
+            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 lg:col-span-3">
+              <h4 className="text-base font-semibold text-slate-900 mb-2">Regional Summary</h4>
+              <p className="text-sm text-slate-500 mb-4">Totals and YoY growth by territory</p>
+              <div className="relative bg-gradient-to-br from-slate-50 via-slate-100 to-slate-50 rounded-xl border border-slate-200 p-4 overflow-hidden">
+                <div className="absolute inset-0 pointer-events-none opacity-60">
+                  <div className="absolute inset-10 border-2 border-dashed border-slate-200 rounded-xl"></div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative">
+                  {REGION_SUMMARY.map((region) => {
+                    const isNa = region.growthPct === null || Number.isNaN(region.growthPct);
+                    const badge =
+                      isNa ? 'bg-slate-100 text-slate-600' : region.growthPct >= 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700';
+                    const growthLabel = isNa ? 'N/A' : `${region.growthPct >= 0 ? '+' : ''}${region.growthPct.toFixed(1)}%`;
+                    return (
+                      <div key={region.territory} className="bg-white/80 backdrop-blur-sm border border-slate-200 rounded-lg p-4 shadow-sm">
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{region.label}</span>
+                          <span className={`px-2 py-0.5 rounded text-[11px] font-semibold ${badge}`}>{growthLabel}</span>
+                        </div>
+                        <div className="text-lg font-bold text-slate-900">{formatCurrencyWhole(region.sales2025)}</div>
+                        <p className="text-xs text-slate-500">2024: {formatCurrencyWhole(region.sales2024)}</p>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
 

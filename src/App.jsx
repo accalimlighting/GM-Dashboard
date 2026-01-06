@@ -1,15 +1,14 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { 
-  TrendingUp, 
-  DollarSign, 
-  Activity, 
-  PieChart, 
+  DollarSign,
+  Activity,
+  PieChart,
   Percent,
-  ArrowUpRight,
-  ArrowDownRight,
   Table,
   Users,
-  Briefcase
+  Briefcase,
+  ArrowUpRight,
+  ArrowDownRight
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -25,16 +24,14 @@ import {
   Pie,
   ComposedChart,
   Line,
-  Area,
-  AreaChart,
-  ReferenceLine,
   LabelList
 } from 'recharts';
 
-// --- DATA SECTION ---
+// --- DATA SECTION (final FY24/FY25) ---
 
 const TOTAL_SALES_2024 = 15038228.95;
 const TOTAL_SALES_2025 = 17096341.07;
+
 const YOY_DATA = [
   { 
     category: "Revenue & Profit",
@@ -75,19 +72,15 @@ const HISTORY_DATA = [
   { month: '2025', sales: TOTAL_SALES_2025, marginPct: 39.5, ebitda: 635230 },
 ];
 
-// --- UPDATED CHART DATA ---
-
-// 1. REVENUE ALLOCATION PIE
 const REVENUE_PIE_DATA = [
-  { name: 'COGS', value: 10349942.61, color: '#EF4444' }, // Red
-  { name: 'Labor', value: 2305718.36, color: '#F59E0B' }, // Orange
-  { name: 'Selling', value: 2694976.18, color: '#FCD34D' }, // Yellow
-  { name: 'OpEx (Admin + Facility)', value: 1110474.14, color: '#6366F1' }, // Indigo
-  { name: 'Net Profit', value: 386450.37, color: '#10B981' }, // Green
-  { name: 'Interest/Tax', value: 248779.41, color: '#94A3B8' }, // Gray
+  { name: 'COGS', value: 10349942.61, color: '#EF4444' },
+  { name: 'Labor', value: 2305718.36, color: '#F59E0B' },
+  { name: 'Selling', value: 2694976.18, color: '#FCD34D' },
+  { name: 'OpEx (Admin + Facility)', value: 1110474.14, color: '#6366F1' },
+  { name: 'Net Profit', value: 386450.37, color: '#10B981' },
+  { name: 'Interest/Tax', value: 248779.41, color: '#94A3B8' },
 ];
 
-// 2. COST EFFICIENCY
 const COST_EFFICIENCY_DATA = [
   { name: 'COGS', y2024: 67.7, y2025: 60.5 },
   { name: 'Labor', y2024: 13.9, y2025: 13.5 },
@@ -104,12 +97,11 @@ const TOP_EXPENSES_DATA = [
 ];
 
 const LABOR_EFFICIENCY_DATA = [
-  { year: '2024', labor: 2089865, sales: 15038228, ratio: 7.20 },
-  { year: '2025', labor: 2305718, sales: 17096341, ratio: 7.41 },
+  { year: '2024', labor: 2089865.44, sales: TOTAL_SALES_2024, ratio: 7.20 },
+  { year: '2025', labor: 2305718.36, sales: TOTAL_SALES_2025, ratio: 7.41 },
 ];
 
-// SALES REP YOY DATA (from 2024 vs 2025 report)
-const SALES_REP_YOY = [
+const SALES_REP_DATA = [
   { name: "Illuminations (ALILLU610)", territory: "USA East", y2024: 383443.18, y2025: 1703977.50 },
   { name: "PSGI", territory: "USA East", y2024: 0, y2025: 1204452.26 },
   { name: "ARDD & Winter (ALARDD770)", territory: "USA East", y2024: 201406.39, y2025: 897206.96 },
@@ -139,50 +131,94 @@ const SALES_REP_YOY = [
   { name: "Crown", territory: "USA East", y2024: 53421.00, y2025: 1897.82 },
   { name: "FRM Lighting", territory: "USA East", y2024: 0, y2025: 1672.92 },
   { name: "Idaho", territory: "USA West", y2024: 5505.04, y2025: 4575.94 },
-  { name: "NWLC (ALNWLC503)", territory: "USA West", y2024: 14304.81, y2025: 0 },
   { name: "Hawaii", territory: "USA West", y2024: 0, y2025: 0 },
-];
+  { name: "NWLC (ALNWLC503)", territory: "USA West", y2024: 14304.81, y2025: 0 },
+].filter((r) => r.y2025 > 0);
+
+// --- UTILITIES ---
+
+const formatValue = (val, type) => {
+  if (type === 'percent') return `${val.toFixed(1)}%`;
+  if (Math.abs(val) >= 1_000_000) return `$${(val / 1_000_000).toFixed(2)}M`;
+  if (Math.abs(val) >= 1_000) return `$${(val / 1_000).toFixed(0)}k`;
+  return `$${val.toFixed(0)}`;
+};
+
+const formatDeltaPair = (current, prior, type) => {
+  const delta = current - prior;
+  const pct = prior !== 0 ? (delta / Math.abs(prior)) * 100 : 0;
+  const sign = delta > 0 ? '+' : delta < 0 ? '-' : '';
+  const absDelta = Math.abs(delta);
+  const deltaStr = type === 'percent' 
+    ? `${sign}${absDelta.toFixed(1)}%` 
+    : `${sign}${formatValue(absDelta, 'currency')}`;
+  const pctStr = `${pct >= 0 ? '+' : ''}${pct.toFixed(1)}%`;
+  return { deltaStr, pctStr };
+};
+
+const calcVariance = (current, prior, invertColor) => {
+  const diff = current - prior;
+  const pct = prior !== 0 ? (diff / Math.abs(prior)) * 100 : 0;
+  const isGood = invertColor ? diff < 0 : diff > 0;
+  return { diff, pct, isGood };
+};
+
+// --- COMPONENT ---
 
 export default function GMDashboard() {
-  const [activeTab, setActiveTab] = useState('overview'); 
+  const [activeTab, setActiveTab] = useState('overview');
+  const [yoySort, setYoySort] = useState({ field: 'name', dir: 'asc' });
+  const [repSort, setRepSort] = useState({ field: 'y2025', dir: 'desc' });
 
-  // Calculations for variance
-  const calculateVariance = (current, prior, invertColor) => {
-    const diff = current - prior;
-    const pct = prior !== 0 ? (diff / Math.abs(prior)) * 100 : 0;
-    let isGood = invertColor ? diff < 0 : diff > 0;
-    return { diff, pct, isGood };
+  const repRows = useMemo(() => {
+    return SALES_REP_DATA.map((rep) => {
+      const yoy = rep.y2025 - rep.y2024;
+      const yoyPct = rep.y2024 === 0 ? 100 : (yoy / rep.y2024) * 100;
+      return { ...rep, yoy, yoyPct };
+    });
+  }, []);
+
+  const regionTotals = useMemo(() => {
+    return repRows.reduce((acc, rep) => {
+      const region = rep.territory.includes('East') ? 'East' : rep.territory.includes('Central') ? 'Central' : 'West';
+      acc[region] = (acc[region] || 0) + rep.y2025;
+      return acc;
+    }, {});
+  }, [repRows]);
+
+  const sortData = (data, sort) => {
+    const dir = sort.dir === 'asc' ? 1 : -1;
+    return [...data].sort((a, b) => {
+      const va = a[sort.field];
+      const vb = b[sort.field];
+      if (typeof va === 'string') return va.localeCompare(vb) * dir;
+      return (va - vb) * dir;
+    });
   };
 
-  const formatValue = (val, type) => {
-    if (type === 'percent') return `${val.toFixed(1)}%`;
-    if (Math.abs(val) >= 1000000) return `$${(val / 1000000).toFixed(2)}M`;
-    if (Math.abs(val) >= 1000) return `$${(val / 1000).toFixed(0)}k`;
-    return `$${val.toFixed(0)}`;
+  const yoyRows = useMemo(() => {
+    const rows = YOY_DATA.flatMap((section) =>
+      section.items.map((item) => ({ ...item, category: section.category }))
+    );
+    return sortData(rows, yoySort);
+  }, [yoySort]);
+
+  const sortedReps = useMemo(() => sortData(repRows, repSort), [repRows, repSort]);
+  const topRepData = useMemo(() => sortedReps.slice(0, 15), [sortedReps]);
+
+  const handleSort = (setter, current, field) => {
+    setter((prev) => ({ field, dir: prev.field === field && prev.dir === 'asc' ? 'desc' : 'asc' }));
   };
-
-  const formatDelta = (val, type) => {
-    if (val === 0) return type === 'percent' ? '0.0%' : '$0';
-    const sign = val > 0 ? '+' : '-';
-    const absVal = Math.abs(val);
-    if (type === 'percent') return `${sign}${absVal.toFixed(1)}%`;
-    return `${sign}${formatValue(absVal, 'currency')}`;
-  };
-
-  const repRows = SALES_REP_YOY.map((rep) => {
-    const yoy = rep.y2025 - rep.y2024;
-    const yoyPct = rep.y2024 === 0 ? 100 : (yoy / rep.y2024) * 100;
-    return { ...rep, yoy, yoyPct };
-  }).sort((a, b) => b.y2025 - a.y2025);
-
-  const topRepData = repRows.slice(0, 15);
 
   const kpiCards = [
     {
       title: "GROSS REVENUE",
       category: "Revenue",
-      value: formatValue(TOTAL_SALES_2025, "currency"),
-      subValue: `Vs 2024: ${formatDelta(TOTAL_SALES_2025 - TOTAL_SALES_2024, 'currency')}`,
+      value: formatValue(TOTAL_SALES_2025, 'currency'),
+      subValue: (() => {
+        const { deltaStr, pctStr } = formatDeltaPair(TOTAL_SALES_2025, TOTAL_SALES_2024, 'currency');
+        return `vs. 2024: ${deltaStr} (${pctStr})`;
+      })(),
       icon: DollarSign,
       color: "bg-blue-50 text-blue-700",
       status: "Growth",
@@ -192,7 +228,10 @@ export default function GMDashboard() {
       title: "GROSS MARGIN",
       category: "Efficiency",
       value: `39.5%`,
-      subValue: `Vs 2024: ${formatDelta(39.5 - 32.3, 'percent')}`,
+      subValue: (() => {
+        const { deltaStr, pctStr } = formatDeltaPair(39.5, 32.3, 'percent');
+        return `vs. 2024: ${deltaStr} (${pctStr})`;
+      })(),
       icon: Activity,
       color: "bg-emerald-50 text-emerald-700",
       status: "Strong",
@@ -201,9 +240,12 @@ export default function GMDashboard() {
     {
       title: "PROFITABILITY (EBITDA)",
       category: "Profitability",
-      value: formatValue(635229.78, "currency"),
-      subValue: `Vs 2024: ${formatDelta(635229.78 - (-953185.16), "currency")}`,
-      icon: TrendingUp,
+      value: formatValue(635229.78, 'currency'),
+      subValue: (() => {
+        const { deltaStr, pctStr } = formatDeltaPair(635229.78, -953185.16, 'currency');
+        return `vs. 2024: ${deltaStr} (${pctStr})`;
+      })(),
+      icon: PieChart,
       color: "bg-indigo-50 text-indigo-700",
       status: "Turnaround",
       statusColor: "bg-green-100 text-green-800"
@@ -211,9 +253,12 @@ export default function GMDashboard() {
     {
       title: "NET INCOME",
       category: "Bottom Line",
-      value: formatValue(386450.37, "currency"),
-      subValue: `Vs 2024: ${formatDelta(386450.37 - (-1138149.23), "currency")}`,
-      icon: PieChart,
+      value: formatValue(386450.37, 'currency'),
+      subValue: (() => {
+        const { deltaStr, pctStr } = formatDeltaPair(386450.37, -1138149.23, 'currency');
+        return `vs. 2024: ${deltaStr} (${pctStr})`;
+      })(),
+      icon: DollarSign,
       color: "bg-amber-50 text-amber-700",
       status: "Positive",
       statusColor: "bg-green-100 text-green-800"
@@ -222,11 +267,9 @@ export default function GMDashboard() {
 
   return (
     <div className="min-h-screen bg-gray-50 font-sans text-slate-800 p-4 md:p-8">
-      
       {/* Header */}
       <header className="mb-4">
         <div className="flex items-center gap-4 mb-6">
-          {/* Logo Placeholder (Represents the SVG logo requested) */}
           <div className="flex-shrink-0">
             <img src="/acclaim_logo.svg" alt="Acclaim Lighting" className="h-12" />
           </div>
@@ -238,34 +281,17 @@ export default function GMDashboard() {
             </p>
           </div>
         </div>
-        
-        {/* Full Width Tab Navigation */}
         <div className="w-full bg-white border border-slate-200 rounded-lg shadow-sm overflow-x-auto">
           <div className="flex w-full">
-            <button 
-              onClick={() => setActiveTab('overview')}
-              className={`flex-1 px-6 py-4 text-sm font-medium transition-all flex items-center justify-center gap-2 border-b-2 ${
-                activeTab === 'overview' ? 'border-blue-500 text-blue-600 bg-blue-50/50' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'
-              }`}
-            >
+            <button onClick={() => setActiveTab('overview')} className={`flex-1 px-6 py-4 text-sm font-medium transition-all flex items-center justify-center gap-2 border-b-2 ${activeTab === 'overview' ? 'border-blue-500 text-blue-600 bg-blue-50/50' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}>
               <Activity className="w-4 h-4" />
               Overview
             </button>
-            <button 
-              onClick={() => setActiveTab('yoy')}
-              className={`flex-1 px-6 py-4 text-sm font-medium transition-all flex items-center justify-center gap-2 border-b-2 ${
-                activeTab === 'yoy' ? 'border-blue-500 text-blue-600 bg-blue-50/50' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'
-              }`}
-            >
+            <button onClick={() => setActiveTab('yoy')} className={`flex-1 px-6 py-4 text-sm font-medium transition-all flex items-center justify-center gap-2 border-b-2 ${activeTab === 'yoy' ? 'border-blue-500 text-blue-600 bg-blue-50/50' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}>
               <Table className="w-4 h-4" />
               YoY Analysis
             </button>
-            <button 
-              onClick={() => setActiveTab('salesreps')}
-              className={`flex-1 px-6 py-4 text-sm font-medium transition-all flex items-center justify-center gap-2 border-b-2 ${
-                activeTab === 'salesreps' ? 'border-blue-500 text-blue-600 bg-blue-50/50' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'
-              }`}
-            >
+            <button onClick={() => setActiveTab('salesreps')} className={`flex-1 px-6 py-4 text-sm font-medium transition-all flex items-center justify-center gap-2 border-b-2 ${activeTab === 'salesreps' ? 'border-blue-500 text-blue-600 bg-blue-50/50' : 'border-transparent text-slate-500 hover:text-slate-700 hover:bg-slate-50'}`}>
               <Briefcase className="w-4 h-4" />
               Sales Reps
             </button>
@@ -273,7 +299,7 @@ export default function GMDashboard() {
         </div>
       </header>
 
-      {/* KPI Cards - ONLY ON OVERVIEW */}
+      {/* KPI Cards */}
       {activeTab === 'overview' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {kpiCards.map((kpi, index) => (
@@ -296,445 +322,244 @@ export default function GMDashboard() {
         </div>
       )}
 
-      {activeTab === 'overview' ? (
-        <>
-          {/* OVERVIEW CONTENT - Uniform 2x2 Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-             
-             {/* Chart 1: Profitability Turnaround */}
-             <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-              <h3 className="text-lg font-semibold text-slate-900 mb-6">Profitability Turnaround (2024 vs 2025)</h3>
-              <div className="h-80 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={HISTORY_DATA} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                    <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{fill: '#64748b'}} />
-                    <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{fill: '#64748b'}} tickFormatter={(val) => `$${val/1000000}M`} />
-                    <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{fill: '#10B981'}} tickFormatter={(val) => `${val}%`} />
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0' }}
-                    />
-                    <Legend />
-                    <Bar yAxisId="left" dataKey="sales" name="Revenue" fill="#3B82F6" radius={[4, 4, 0, 0]} barSize={40} />
-                    <Bar yAxisId="left" dataKey="ebitda" name="EBITDA" fill="#10B981" radius={[4, 4, 0, 0]} barSize={40} />
-                    <Line yAxisId="right" type="monotone" dataKey="marginPct" name="Margin %" stroke="#F59E0B" strokeWidth={3} />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
+      {activeTab === 'overview' && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+            <h3 className="text-lg font-semibold text-slate-900 mb-6">Profitability Turnaround (2024 vs 2025)</h3>
+            <div className="h-80 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={HISTORY_DATA} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{fill: '#64748b'}} />
+                  <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{fill: '#64748b'}} tickFormatter={(val) => `$${val/1000000}M`} />
+                  <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{fill: '#10B981'}} tickFormatter={(val) => `${val}%`} />
+                  <Tooltip contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0' }} />
+                  <Legend />
+                  <Bar yAxisId="left" dataKey="sales" name="Revenue" fill="#3B82F6" radius={[4, 4, 0, 0]} barSize={40} />
+                  <Bar yAxisId="left" dataKey="ebitda" name="EBITDA" fill="#10B981" radius={[4, 4, 0, 0]} barSize={40} />
+                  <Line yAxisId="right" type="monotone" dataKey="marginPct" name="Margin %" stroke="#F59E0B" strokeWidth={3} />
+                </BarChart>
+              </ResponsiveContainer>
             </div>
+          </div>
 
-            {/* Chart 2: P&L Breakdown (Pie Chart) - CENTERED */}
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">2025 Revenue Allocation</h3>
-              <p className="text-xs text-slate-500 mb-4">Where did the $17.1M go?</p>
-              <div className="h-80 w-full relative">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RePieChart>
-                    <Pie
-                      data={REVENUE_PIE_DATA}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={75}
-                      outerRadius={105}
-                      paddingAngle={2}
-                      dataKey="value"
-                      label={({ name, percent }) => {
-                        return `${name} (${(percent * 100).toFixed(1)}%)`;
-                      }}
-                      labelLine={{ stroke: '#cbd5e1', strokeWidth: 1 }}
-                    >
-                      {REVENUE_PIE_DATA.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.color} />
-                      ))}
-                    </Pie>
-                    <Tooltip formatter={(value) => `$${(value/1000).toFixed(0)}k`} />
-                  </RePieChart>
-                </ResponsiveContainer>
-                {/* Center Label - Centered absolutely within the chart container */}
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
-                  <span className="block text-[10px] text-slate-400 uppercase font-bold tracking-wider">Total Rev</span>
-                  <span className="block font-bold text-slate-800 text-sm">$17.1M</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Chart 3: Labor Efficiency Ratio */}
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-                <div>
-                  <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                    <Users className="w-5 h-5 text-indigo-600" />
-                    Labor Efficiency Ratio
-                  </h3>
-                  <p className="text-slate-500 text-sm">Revenue per $1.00 Labor</p>
-                </div>
-              </div>
-              
-              <div className="h-80 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={LABOR_EFFICIENCY_DATA} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                    <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{fill: '#64748b'}} />
-                    <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{fill: '#64748b'}} tickFormatter={(val) => `$${(val/1000000).toFixed(1)}M`} />
-                    <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{fill: '#4F46E5'}} domain={[0, 10]} />
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0' }}
-                    />
-                    <Legend />
-                    <Bar yAxisId="left" dataKey="labor" name="Total Labor Cost" fill="#94A3B8" radius={[4, 4, 0, 0]} barSize={50} />
-                    <Line yAxisId="right" type="monotone" dataKey="ratio" name="Efficiency Ratio" stroke="#4F46E5" strokeWidth={3} dot={{r: 6, fill: "#4F46E5"}}>
-                      <LabelList 
-                        dataKey="ratio" 
-                        position="top" 
-                        offset={10} 
-                        formatter={(val) => val.toFixed(2)} 
-                        style={{ fill: '#4F46E5', fontSize: '12px', fontWeight: 'bold' }} 
-                      />
-                    </Line>
-                  </ComposedChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-
-            {/* Chart 4: Cost Structure Efficiency */}
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
-                <div>
-                  <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2">
-                    <Percent className="w-5 h-5 text-emerald-600" />
-                    Cost Efficiency Trends
-                  </h3>
-                  <p className="text-slate-500 text-sm">Expenses as % of Revenue</p>
-                </div>
-              </div>
-              
-              <div className="h-80 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={COST_EFFICIENCY_DATA} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                    <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b'}} />
-                    <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b'}} tickFormatter={(val) => `${val}%`} />
-                    <Tooltip 
-                      cursor={{fill: '#f8fafc'}}
-                      contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0' }}
-                      formatter={(val) => `${val}%`}
-                    />
-                    <Legend />
-                    <Bar dataKey="y2024" name="2024 %" fill="#cbd5e1" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="y2025" name="2025 %" fill="#10B981" radius={[4, 4, 0, 0]} />
-                  </BarChart>
-                </ResponsiveContainer>
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+            <h3 className="text-lg font-semibold text-slate-900 mb-2">2025 Revenue Allocation</h3>
+            <p className="text-xs text-slate-500 mb-4">Where did the $17.1M go?</p>
+            <div className="h-80 w-full relative">
+              <ResponsiveContainer width="100%" height="100%">
+                <RePieChart>
+                  <Pie data={REVENUE_PIE_DATA} cx="50%" cy="50%" innerRadius={75} outerRadius={105} paddingAngle={2} dataKey="value" label={({ name, percent }) => `${name} (${(percent * 100).toFixed(1)}%)`} labelLine={{ stroke: '#cbd5e1', strokeWidth: 1 }}>
+                    {REVENUE_PIE_DATA.map((entry, index) => (<Cell key={`cell-${index}`} fill={entry.color} />))}
+                  </Pie>
+                  <Tooltip formatter={(value) => `$${(value/1000).toFixed(0)}k`} />
+                </RePieChart>
+              </ResponsiveContainer>
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
+                <span className="block text-[10px] text-slate-400 uppercase font-bold tracking-wider">Total Rev</span>
+                <span className="block font-bold text-slate-800 text-sm">$17.1M</span>
               </div>
             </div>
           </div>
-        </>
-      ) : activeTab === 'yoy' ? (
-        <>
-          {/* YOY ANALYSIS CONTENT */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 h-full">
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 lg:col-span-1">
-              <h3 className="text-lg font-semibold text-slate-900 mb-4">Top 5 Expense Drivers (2024 vs 2025)</h3>
-              <div className="h-[500px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={TOP_EXPENSES_DATA} layout="vertical" margin={{ top: 20, right: 30, left: 40, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
-                    <XAxis type="number" axisLine={false} tickLine={false} tick={{fill: '#64748b'}} tickFormatter={(val) => `$${val/1000000}M`} />
-                    <YAxis type="category" dataKey="name" width={100} tick={{fontSize: 11, fill: '#1e293b'}} />
-                    <Tooltip 
-                      cursor={{fill: '#f8fafc'}}
-                      contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0' }}
-                      formatter={(val) => `$${val.toLocaleString()}`}
-                    />
-                    <Legend verticalAlign="top" align="right"/>
-                    <Bar dataKey="y2024" name="2024" fill="#cbd5e1" radius={[0, 4, 4, 0]} barSize={20} />
-                    <Bar dataKey="y2025" name="2025" fill="#ef4444" radius={[0, 4, 4, 0]} barSize={20} />
-                  </BarChart>
-                </ResponsiveContainer>
+
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+              <div>
+                <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2"><Users className="w-5 h-5 text-indigo-600" /> Labor Efficiency Ratio</h3>
+                <p className="text-slate-500 text-sm">Revenue per $1.00 Labor</p>
               </div>
             </div>
+            <div className="h-80 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <ComposedChart data={LABOR_EFFICIENCY_DATA} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <XAxis dataKey="year" axisLine={false} tickLine={false} tick={{fill: '#64748b'}} />
+                  <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{fill: '#64748b'}} tickFormatter={(val) => `$${(val/1000000).toFixed(1)}M`} />
+                  <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{fill: '#4F46E5'}} domain={[0, 10]} />
+                  <Tooltip contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0' }} />
+                  <Legend />
+                  <Bar yAxisId="left" dataKey="labor" name="Total Labor Cost" fill="#94A3B8" radius={[4, 4, 0, 0]} barSize={50} />
+                  <Line yAxisId="right" type="monotone" dataKey="ratio" name="Efficiency Ratio" stroke="#4F46E5" strokeWidth={3} dot={{r: 6, fill: "#4F46E5"}}>
+                    <LabelList dataKey="ratio" position="top" offset={10} formatter={(val) => val.toFixed(2)} style={{ fill: '#4F46E5', fontSize: '12px', fontWeight: 'bold' }} />
+                  </Line>
+                </ComposedChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
 
-            <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden lg:col-span-2 h-full">
-              <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-                <h3 className="font-semibold text-slate-900">Detailed Year-Over-Year Variance</h3>
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+              <div>
+                <h3 className="text-lg font-semibold text-slate-900 flex items-center gap-2"><Percent className="w-5 h-5 text-emerald-600" /> Cost Efficiency Trends</h3>
+                <p className="text-slate-500 text-sm">Expenses as % of Revenue</p>
               </div>
-              <div className="overflow-x-auto">
-                  <table className="w-full text-sm text-left">
-                    <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-100 sticky top-0">
-                      <tr>
-                        <th className="px-6 py-3 w-1/3 bg-slate-50">Line Item</th>
-                        <th className="px-6 py-3 text-right bg-slate-50">2024 Actual</th>
-                        <th className="px-6 py-3 text-right bg-slate-50">2025 Actual</th>
-                        <th className="px-6 py-3 text-right bg-slate-50">Variance ($)</th>
-                        <th className="px-6 py-3 text-right bg-slate-50">Variance (%)</th>
+            </div>
+            <div className="h-80 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={COST_EFFICIENCY_DATA} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b'}} />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b'}} tickFormatter={(val) => `${val}%`} />
+                  <Tooltip cursor={{fill: '#f8fafc'}} contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0' }} formatter={(val) => `${val}%`} />
+                  <Legend />
+                  <Bar dataKey="y2024" name="2024 %" fill="#cbd5e1" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="y2025" name="2025 %" fill="#10B981" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {activeTab === 'yoy' && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 lg:col-span-1">
+            <h3 className="text-lg font-semibold text-slate-900 mb-4">Top 5 Expense Drivers (2024 vs 2025)</h3>
+            <div className="h-[500px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={TOP_EXPENSES_DATA} layout="vertical" margin={{ top: 20, right: 30, left: 40, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
+                  <XAxis type="number" axisLine={false} tickLine={false} tick={{fill: '#64748b'}} tickFormatter={(val) => `$${val/1000000}M`} />
+                  <YAxis type="category" dataKey="name" width={120} tick={{fontSize: 11, fill: '#1e293b'}} />
+                  <Tooltip cursor={{fill: '#f8fafc'}} contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0' }} formatter={(val) => `$${val.toLocaleString()}`} />
+                  <Legend verticalAlign="top" align="right"/>
+                  <Bar dataKey="y2024" name="2024" fill="#cbd5e1" radius={[0, 4, 4, 0]} barSize={20} />
+                  <Bar dataKey="y2025" name="2025" fill="#ef4444" radius={[0, 4, 4, 0]} barSize={20} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden lg:col-span-2 h-full">
+            <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+              <h3 className="font-semibold text-slate-900">Detailed Year-Over-Year Variance</h3>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm text-left">
+                <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-100 sticky top-0">
+                  <tr>
+                    <th className="px-6 py-3 w-1/3 bg-slate-50 cursor-pointer" onClick={() => handleSort(setYoySort, yoySort, 'name')}>Line Item</th>
+                    <th className="px-6 py-3 text-right bg-slate-50 cursor-pointer" onClick={() => handleSort(setYoySort, yoySort, 'y2024')}>2024 Actual</th>
+                    <th className="px-6 py-3 text-right bg-slate-50 cursor-pointer" onClick={() => handleSort(setYoySort, yoySort, 'y2025')}>2025 Actual</th>
+                    <th className="px-6 py-3 text-right bg-slate-50 cursor-pointer" onClick={() => handleSort(setYoySort, yoySort, 'variance')}>Variance ($)</th>
+                    <th className="px-6 py-3 text-right bg-slate-50 cursor-pointer" onClick={() => handleSort(setYoySort, yoySort, 'variancePct')}>Variance (%)</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {yoyRows.map((item, idx) => {
+                    const variance = calcVariance(item.y2025, item.y2024, item.invertColor);
+                    const isPositive = variance.diff > 0;
+                    return (
+                      <tr key={`${item.category}-${item.name}-${idx}`} className="hover:bg-slate-50 transition-colors">
+                        <td className="px-6 py-4 font-medium text-slate-900">{item.name}</td>
+                        <td className="px-6 py-4 text-right text-slate-500">{formatValue(item.y2024, item.format)}</td>
+                        <td className="px-6 py-4 text-right font-medium text-slate-900">{formatValue(item.y2025, item.format)}</td>
+                        <td className={`px-6 py-4 text-right font-medium ${variance.isGood ? 'text-emerald-600' : 'text-red-600'}`}>
+                          {isPositive ? '+' : ''}{formatValue(variance.diff, item.format)}
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${variance.isGood ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>
+                            {variance.isGood ? <ArrowUpRight className="w-3 h-3 mr-1" /> : <ArrowDownRight className="w-3 h-3 mr-1" />}
+                            {variance.pct.toFixed(1)}%
+                          </span>
+                        </td>
                       </tr>
-                    </thead>
-                    <tbody className="divide-y divide-slate-100">
-                      {YOY_DATA.map((section, idx) => (
-                        <React.Fragment key={idx}>
-                          <tr className="bg-slate-50/50">
-                            <td colSpan={5} className="px-6 py-2 font-bold text-xs text-slate-500 uppercase tracking-wider">{section.category}</td>
-                          </tr>
-                          {section.items.map((item, itemIdx) => {
-                            const variance = calculateVariance(item.y2025, item.y2024, item.invertColor);
-                            const isPositive = variance.diff > 0;
-                            
-                            return (
-                              <tr key={`${idx}-${itemIdx}`} className="hover:bg-slate-50 transition-colors">
-                                <td className="px-6 py-4 font-medium text-slate-900">{item.name}</td>
-                                <td className="px-6 py-4 text-right text-slate-500">
-                                  {formatValue(item.y2024, item.format)}
-                                </td>
-                                <td className="px-6 py-4 text-right font-medium text-slate-900">
-                                  {formatValue(item.y2025, item.format)}
-                                </td>
-                                <td className={`px-6 py-4 text-right font-medium ${variance.isGood ? 'text-emerald-600' : 'text-red-600'}`}>
-                                  {isPositive ? '+' : ''}{formatValue(variance.diff, item.format)}
-                                </td>
-                                <td className="px-6 py-4 text-right">
-                                  <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${
-                                    variance.isGood 
-                                      ? 'bg-emerald-50 text-emerald-700' 
-                                      : 'bg-red-50 text-red-700'
-                                  }`}>
-                                    {variance.isGood ? <ArrowUpRight className="w-3 h-3 mr-1" /> : <ArrowDownRight className="w-3 h-3 mr-1" />}
-                                    {variance.pct.toFixed(1)}%
-                                  </span>
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </React.Fragment>
-                      ))}
-                    </tbody>
-                  </table>
-              </div>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
-        </>
-      ) : activeTab === 'products' ? (
-        <>
-          {/* PRODUCT ANALYSIS CONTENT */}
-          
-          {/* Row 1: Item Class Performance */}
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 mb-8">
-             <div className="flex justify-between items-center mb-6">
-                <div>
-                  <h3 className="text-lg font-semibold text-slate-900">Sales by Item Class</h3>
-                  <p className="text-slate-500 text-sm">Revenue vs Margin %</p>
-                </div>
-                <div className="flex gap-2">
-                  <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-blue-50 text-blue-700 rounded-full border border-blue-100">
-                    <div className="w-2 h-2 rounded-full bg-blue-500"></div> Sales Volume
-                  </div>
-                  <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-orange-50 text-orange-700 rounded-full border border-orange-100">
-                    <div className="w-2 h-2 rounded-full bg-orange-500"></div> Margin %
-                  </div>
-                </div>
-             </div>
-             <div className="h-80 w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart data={PRODUCT_CLASS_DATA} margin={{ top: 10, right: 30, left: 20, bottom: 20 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                    <XAxis 
-                      dataKey="name" 
-                      axisLine={false} 
-                      tickLine={false} 
-                      tick={{fill: '#64748b', fontSize: 11}} 
-                      interval={0}
-                      angle={-15}
-                      textAnchor="end"
-                    />
-                    <YAxis yAxisId="left" axisLine={false} tickLine={false} tick={{fill: '#64748b'}} tickFormatter={(val) => `$${val/1000000}M`} />
-                    <YAxis yAxisId="right" orientation="right" axisLine={false} tickLine={false} tick={{fill: '#f97316'}} tickFormatter={(val) => `${val}%`} domain={[0, 100]} />
-                    <Tooltip 
-                      contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0' }}
-                      formatter={(val, name) => {
-                        if (name === "margin") return [`${val}%`, "Margin"];
-                        return [`$${val.toLocaleString()}`, "Sales"];
-                      }}
-                    />
-                    <Bar yAxisId="left" dataKey="sales" fill="#3B82F6" radius={[4, 4, 0, 0]} barSize={40} />
-                    <Line yAxisId="right" type="monotone" dataKey="margin" stroke="#f97316" strokeWidth={3} dot={{r: 4, fill: "#f97316"}} />
-                  </ComposedChart>
-                </ResponsiveContainer>
-             </div>
-          </div>
+        </div>
+      )}
 
-          {/* Row 2: Top Products Table */}
-          <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-             <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50 flex justify-between items-center">
-                <div>
-                  <h3 className="font-semibold text-slate-900">Top 20 Products (YTD)</h3>
-                  <p className="text-slate-500 text-xs mt-0.5">Ranked by Line Total</p>
-                </div>
-                <div className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-lg text-xs font-medium border border-emerald-100">
-                   Top Product = 4.7% of Revenue
-                </div>
-             </div>
-             <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left">
-                  <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-100">
-                    <tr>
-                      <th className="px-6 py-3 w-12 text-center">Rank</th>
-                      <th className="px-6 py-3">Product SKU</th>
-                      <th className="px-6 py-3">Description</th>
-                      <th className="px-6 py-3 text-right">Total Sales</th>
-                      <th className="px-6 py-3 text-right">% Total Sales</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {TOP_PRODUCTS_DATA.map((prod) => {
-                      const share = (prod.sales / TOTAL_REVENUE) * 100;
-                      return (
-                        <tr key={prod.rank} className="hover:bg-slate-50 transition-colors">
-                           <td className="px-6 py-4 text-center font-bold text-slate-400">#{prod.rank}</td>
-                           <td className="px-6 py-4 font-mono text-indigo-600 font-medium">{prod.sku}</td>
-                           <td className="px-6 py-4 text-slate-600">{prod.desc}</td>
-                           <td className="px-6 py-4 text-right font-medium text-slate-900">
-                             ${prod.sales.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-                           </td>
-                           <td className="px-6 py-4 text-right">
-                              <div className="flex items-center justify-end gap-2">
-                                <span className="text-xs text-slate-500">{share.toFixed(1)}%</span>
-                                <div className="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                                  <div 
-                                    className="h-full bg-indigo-500 rounded-full" 
-                                    style={{ width: `${share * 15}%` }} // Scale up for visibility
-                                  ></div>
-                                </div>
-                              </div>
-                           </td>
-                        </tr>
-                      )
-                    })}
-                  </tbody>
-                </table>
-             </div>
-          </div>
-        </>
-      ) : activeTab === 'salesreps' ? (
-        <>
-          {/* SALES REPS CONTENT */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 h-full">
-            {/* Chart: YoY Sales by Rep (Top 15 by 2025 sales) */}
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 lg:col-span-3">
-              <div className="flex justify-between items-center mb-6">
-                <div>
-                  <h3 className="text-lg font-semibold text-slate-900">Sales Rep YoY (Top 15)</h3>
-                  <p className="text-slate-500 text-sm">2024 vs 2025 totals with YoY%</p>
-                </div>
-                <div className="flex gap-2">
-                  <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-slate-50 text-slate-700 rounded-full border border-slate-200">
-                    <div className="w-2 h-2 rounded-full bg-slate-400"></div> 2024 Sales
-                  </div>
-                  <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-blue-50 text-blue-700 rounded-full border border-blue-100">
-                    <div className="w-2 h-2 rounded-full bg-blue-500"></div> 2025 Sales
-                  </div>
-                  <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full border border-emerald-100">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500"></div> YoY %
-                  </div>
-                </div>
+      {activeTab === 'salesreps' && (
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 h-full">
+          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 lg:col-span-3">
+            <div className="flex justify-between items-center mb-6">
+              <div>
+                <h3 className="text-lg font-semibold text-slate-900">Sales Rep Performance (Top 15)</h3>
+                <p className="text-slate-500 text-sm">2024 vs 2025 totals with YoY%</p>
               </div>
-              <div className="h-[500px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <ComposedChart 
-                    data={topRepData} 
-                    margin={{ top: 20, right: 30, left: 20, bottom: 80 }}
-                  >
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                    <XAxis 
-                      dataKey="name" 
-                      angle={-45} 
-                      textAnchor="end" 
-                      interval={0} 
-                      tick={{fontSize: 11, fill: '#64748b'}} 
-                      height={80}
-                    />
-                    <YAxis 
-                      yAxisId="left" 
-                      orientation="left" 
-                      tickFormatter={(val) => `$${(val/1000).toFixed(0)}k`} 
-                      tick={{fontSize: 11, fill: '#64748b'}} 
-                      label={{ value: 'Total Sales', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#94a3b8', fontSize: 11 } }}
-                    />
-                    <YAxis 
-                      yAxisId="right" 
-                      orientation="right" 
-                      tickFormatter={(val) => `${val.toFixed(0)}%`} 
-                      domain={[-100, 400]}
-                      tick={{fontSize: 11, fill: '#10B981'}} 
-                      label={{ value: 'YoY %', angle: 90, position: 'insideRight', style: { textAnchor: 'middle', fill: '#10B981', fontSize: 11 } }}
-                    />
-                    <Tooltip 
-                      cursor={{fill: '#f8fafc'}}
-                      contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0' }}
-                      formatter={(val, name) => {
-                        if (name === 'yoyPct') return [`${val.toFixed(1)}%`, 'YoY %'];
-                        return [`$${val.toLocaleString()}`, name === 'y2025' ? '2025 Sales' : '2024 Sales'];
-                      }}
-                    />
-                    <Legend />
-                    <Bar yAxisId="left" dataKey="y2024" name="2024 Sales" fill="#cbd5e1" radius={[4, 4, 0, 0]} barSize={26} />
-                    <Bar yAxisId="left" dataKey="y2025" name="2025 Sales" fill="#3B82F6" radius={[4, 4, 0, 0]} barSize={26} />
-                    <Line yAxisId="right" type="monotone" dataKey="yoyPct" name="YoY %" stroke="#10B981" strokeWidth={2} dot={{r: 3, fill: "#10B981"}} />
-                  </ComposedChart>
-                </ResponsiveContainer>
+              <div className="flex gap-2">
+                <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-slate-50 text-slate-700 rounded-full border border-slate-200">
+                  <div className="w-2 h-2 rounded-full bg-slate-400"></div> 2024 Sales
+                </div>
+                <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-blue-50 text-blue-700 rounded-full border border-blue-100">
+                  <div className="w-2 h-2 rounded-full bg-blue-500"></div> 2025 Sales
+                </div>
+                <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full border border-emerald-100">
+                  <div className="w-2 h-2 rounded-full bg-emerald-500"></div> YoY %
+                </div>
               </div>
             </div>
-
-            {/* Sales Rep Table - All Reps */}
-            <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden lg:col-span-3">
-              <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-                <h3 className="font-semibold text-slate-900">Sales Rep Detail (All Reps)</h3>
-              </div>
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left">
-                  <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-100">
-                    <tr>
-                      <th className="px-6 py-3 w-12 text-center">Rank</th>
-                      <th className="px-6 py-3 bg-slate-50">Rep Name</th>
-                      <th className="px-6 py-3 bg-slate-50">Territory</th>
-                      <th className="px-6 py-3 text-right bg-slate-50">2024 Sales</th>
-                      <th className="px-6 py-3 text-right bg-slate-50">2025 Sales</th>
-                      <th className="px-6 py-3 text-right bg-slate-50">YoY ($)</th>
-                      <th className="px-6 py-3 text-right bg-slate-50">YoY (%)</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100">
-                    {repRows.map((rep, index) => {
-                      const isPositive = rep.yoy >= 0;
-                      return (
-                        <tr key={index} className="hover:bg-slate-50 transition-colors">
-                          <td className="px-6 py-4 text-center font-medium text-slate-400">#{index + 1}</td>
-                          <td className="px-6 py-4 font-medium text-slate-900">{rep.name}</td>
-                          <td className="px-6 py-4 text-slate-600">{rep.territory}</td>
-                          <td className="px-6 py-4 text-right font-mono text-slate-700">
-                            ${rep.y2024.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-                          </td>
-                          <td className="px-6 py-4 text-right font-mono text-slate-700">
-                            ${rep.y2025.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
-                          </td>
-                          <td className={`px-6 py-4 text-right font-medium ${isPositive ? 'text-emerald-600' : 'text-red-600'}`}>
-                            {formatValue(rep.yoy, 'currency')}
-                          </td>
-                          <td className="px-6 py-4 text-right">
-                            <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${
-                              isPositive ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'
-                            }`}>
-                              {rep.yoyPct.toFixed(1)}%
-                            </span>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+            <div className="h-[500px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <ComposedChart data={topRepData} margin={{ top: 20, right: 30, left: 20, bottom: 80 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+                  <XAxis dataKey="name" angle={-45} textAnchor="end" interval={0} tick={{fontSize: 11, fill: '#64748b'}} height={90} />
+                  <YAxis yAxisId="left" orientation="left" tickFormatter={(val) => `$${(val/1000).toFixed(0)}k`} tick={{fontSize: 11, fill: '#64748b'}} label={{ value: 'Total Sales', angle: -90, position: 'insideLeft', style: { textAnchor: 'middle', fill: '#94a3b8', fontSize: 11 } }} />
+                  <YAxis yAxisId="right" orientation="right" tickFormatter={(val) => `${val.toFixed(0)}%`} domain={[-100, 400]} tick={{fontSize: 11, fill: '#10B981'}} label={{ value: 'YoY %', angle: 90, position: 'insideRight', style: { textAnchor: 'middle', fill: '#10B981', fontSize: 11 } }} />
+                  <Tooltip cursor={{fill: '#f8fafc'}} contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0' }} formatter={(val, name) => name === 'yoyPct' ? [`${val.toFixed(1)}%`, 'YoY %'] : [`$${val.toLocaleString()}`, name === 'y2025' ? '2025 Sales' : '2024 Sales']} />
+                  <Legend />
+                  <Bar yAxisId="left" dataKey="y2024" name="2024 Sales" fill="#cbd5e1" radius={[4, 4, 0, 0]} barSize={26} />
+                  <Bar yAxisId="left" dataKey="y2025" name="2025 Sales" fill="#3B82F6" radius={[4, 4, 0, 0]} barSize={26} />
+                  <Line yAxisId="right" type="monotone" dataKey="yoyPct" name="YoY %" stroke="#10B981" strokeWidth={2} dot={{r: 3, fill: "#10B981"}} />
+                </ComposedChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+              {['East','Central','West'].map((region) => (
+                <div key={region} className="bg-slate-50 border border-slate-100 rounded-lg p-4 text-sm font-medium text-slate-700">
+                  <div className="text-xs uppercase tracking-wide text-slate-500 mb-1">{region}</div>
+                  <div className="text-lg font-semibold text-slate-900">{formatValue(regionTotals[region] || 0, 'currency')}</div>
+                </div>
+              ))}
             </div>
           </div>
-        </>
-      ) : null}
 
+          <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden lg:col-span-3">
+            <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+              <h3 className="font-semibold text-slate-900">Sales Rep Detail (All Reps)</h3>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm text-left">
+                <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-100">
+                  <tr>
+                    <th className="px-6 py-3 w-12 text-center">Rank</th>
+                    <th className="px-6 py-3 bg-slate-50 cursor-pointer" onClick={() => handleSort(setRepSort, repSort, 'name')}>Rep Name</th>
+                    <th className="px-6 py-3 bg-slate-50 cursor-pointer" onClick={() => handleSort(setRepSort, repSort, 'territory')}>Territory</th>
+                    <th className="px-6 py-3 text-right bg-slate-50 cursor-pointer" onClick={() => handleSort(setRepSort, repSort, 'y2024')}>2024 Sales</th>
+                    <th className="px-6 py-3 text-right bg-slate-50 cursor-pointer" onClick={() => handleSort(setRepSort, repSort, 'y2025')}>2025 Sales</th>
+                    <th className="px-6 py-3 text-right bg-slate-50 cursor-pointer" onClick={() => handleSort(setRepSort, repSort, 'yoy')}>YoY ($)</th>
+                    <th className="px-6 py-3 text-right bg-slate-50 cursor-pointer" onClick={() => handleSort(setRepSort, repSort, 'yoyPct')}>YoY (%)</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {sortedReps.map((rep, index) => {
+                    const isPositive = rep.yoy >= 0;
+                    return (
+                      <tr key={index} className="hover:bg-slate-50 transition-colors">
+                        <td className="px-6 py-4 text-center font-medium text-slate-400">#{index + 1}</td>
+                        <td className="px-6 py-4 font-medium text-slate-900">{rep.name}</td>
+                        <td className="px-6 py-4 text-slate-600">{rep.territory}</td>
+                        <td className="px-6 py-4 text-right font-mono text-slate-700">${rep.y2024.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+                        <td className="px-6 py-4 text-right font-mono text-slate-700">${rep.y2025.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}</td>
+                        <td className={`px-6 py-4 text-right font-medium ${isPositive ? 'text-emerald-600' : 'text-red-600'}`}>{formatValue(rep.yoy, 'currency')}</td>
+                        <td className="px-6 py-4 text-right">
+                          <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${isPositive ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'}`}>
+                            {rep.yoyPct.toFixed(1)}%
+                          </span>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

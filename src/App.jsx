@@ -1268,10 +1268,15 @@ const formatPercentWhole = (value) => {
             <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 lg:col-span-3">
               <h4 className="text-base font-semibold text-slate-900 mb-2">Regional Summary</h4>
               <p className="text-sm text-slate-500 mb-4">Totals and YoY growth by territory</p>
-              <div className="relative bg-slate-50 rounded-xl border border-slate-200 p-4 overflow-hidden min-h-[260px]">
-                <svg viewBox="0 0 300 180" className="absolute inset-0 w-full h-full text-slate-200" fill="currentColor" aria-hidden="true">
-                  <path d="M18 92l32-12 18-30 34-12 22 10 32-8 28 14 24-6 40 24-8 24-26 10-6 22-34-6-18 20-46-6-18 12-30-10-10-18-24-6-10-22z" />
-                </svg>
+              <div
+                className="relative rounded-xl border border-slate-200 p-4 overflow-hidden min-h-[260px]"
+                style={{
+                  backgroundImage: "url('/shutterstock_400839148.eps')",
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+              >
+                <div className="absolute inset-0 bg-white/80" />
                 <div className="absolute inset-0">
                   {(() => {
                     const positions = {

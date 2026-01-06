@@ -268,7 +268,7 @@ const RAW_SALES_REP_DATA = [
   { name: "PSGI", sales2024: 0, sales2025: 1204452.26, territory: "USA East" },
   { name: "RL VANSTORY", sales2024: 129956.89, sales2025: 31653.20, territory: "USA East" },
   { name: "THOMAS", sales2024: 45589.07, sales2025: 141582.81, territory: "USA East" },
-].filter((rep) => rep.sales2025 > 0).map((rep) => ({ ...rep, target: null, targetHit: false, incentiveRate: null, incentivePaid: 0 }));
+].filter((rep) => rep.sales2025 > 0);
 
 const SALES_REP_DATA = RAW_SALES_REP_DATA
   .map((rep) => {
@@ -1196,7 +1196,7 @@ const formatPercentWhole = (value) => {
                 </div>
                 <div className="flex gap-2 flex-wrap">
                   <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-slate-100 text-slate-700 rounded-full border border-slate-200">
-                    <div className="w-2 h-2 rounded-full bg-slate-400"></div> 2024 Sales
+                    <div className="w-2 h-2 rounded-full bg-slate-300"></div> 2024 Sales
                   </div>
                   <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-blue-50 text-blue-700 rounded-full border border-blue-100">
                     <div className="w-2 h-2 rounded-full bg-blue-500"></div> 2025 Sales
@@ -1268,27 +1268,40 @@ const formatPercentWhole = (value) => {
             <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 lg:col-span-3">
               <h4 className="text-base font-semibold text-slate-900 mb-2">Regional Summary</h4>
               <p className="text-sm text-slate-500 mb-4">Totals and YoY growth by territory</p>
-              <div className="relative bg-gradient-to-br from-slate-50 via-slate-100 to-slate-50 rounded-xl border border-slate-200 p-4 overflow-hidden">
-                <div className="absolute inset-0 pointer-events-none opacity-60">
-                  <div className="absolute inset-10 border-2 border-dashed border-slate-200 rounded-xl"></div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 relative">
-                  {REGION_SUMMARY.map((region) => {
-                    const isNa = region.growthPct === null || Number.isNaN(region.growthPct);
-                    const badge =
-                      isNa ? 'bg-slate-100 text-slate-600' : region.growthPct >= 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700';
-                    const growthLabel = isNa ? 'N/A' : `${region.growthPct >= 0 ? '+' : ''}${region.growthPct.toFixed(1)}%`;
-                    return (
-                      <div key={region.territory} className="bg-white/80 backdrop-blur-sm border border-slate-200 rounded-lg p-4 shadow-sm">
-                        <div className="flex items-center justify-between mb-1">
-                          <span className="text-xs font-semibold uppercase tracking-wide text-slate-500">{region.label}</span>
-                          <span className={`px-2 py-0.5 rounded text-[11px] font-semibold ${badge}`}>{growthLabel}</span>
+              <div className="relative bg-slate-50 rounded-xl border border-slate-200 p-4 overflow-hidden min-h-[260px]">
+                <svg viewBox="0 0 300 180" className="absolute inset-0 w-full h-full text-slate-200" fill="currentColor" aria-hidden="true">
+                  <path d="M18 92l32-12 18-30 34-12 22 10 32-8 28 14 24-6 40 24-8 24-26 10-6 22-34-6-18 20-46-6-18 12-30-10-10-18-24-6-10-22z" />
+                </svg>
+                <div className="absolute inset-0">
+                  {(() => {
+                    const positions = {
+                      West: { top: '62%', left: '20%' },
+                      Central: { top: '55%', left: '50%' },
+                      East: { top: '48%', left: '78%' },
+                    };
+                    return Object.entries(positions).map(([label, pos]) => {
+                      const region = REGION_SUMMARY.find((r) => r.label === label);
+                      if (!region) return null;
+                      const isNa = region.growthPct === null || Number.isNaN(region.growthPct);
+                      const badge =
+                        isNa ? 'bg-slate-100 text-slate-600' : region.growthPct >= 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700';
+                      const growthLabel = isNa ? 'N/A' : `${region.growthPct >= 0 ? '+' : ''}${region.growthPct.toFixed(1)}%`;
+                      return (
+                        <div
+                          key={label}
+                          className="absolute bg-white/90 backdrop-blur-sm border border-slate-200 rounded-lg p-3 shadow-sm w-36"
+                          style={{ top: pos.top, left: pos.left, transform: 'translate(-50%, -50%)' }}
+                        >
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-xs font-semibold uppercase tracking-wide text-slate-600">{label}</span>
+                            <span className={`px-2 py-0.5 rounded text-[11px] font-semibold ${badge}`}>{growthLabel}</span>
+                          </div>
+                          <div className="text-base font-bold text-slate-900">{formatCurrencyWhole(region.sales2025)}</div>
+                          <p className="text-[11px] text-slate-500">2024: {formatCurrencyWhole(region.sales2024)}</p>
                         </div>
-                        <div className="text-lg font-bold text-slate-900">{formatCurrencyWhole(region.sales2025)}</div>
-                        <p className="text-xs text-slate-500">2024: {formatCurrencyWhole(region.sales2024)}</p>
-                      </div>
-                    );
-                  })}
+                      );
+                    });
+                  })()}
                 </div>
               </div>
             </div>
@@ -1353,26 +1366,6 @@ const formatPercentWhole = (value) => {
                           <SortIndicator state={salesRepSort} column="growthPct" />
                         </button>
                       </th>
-                      <th className="px-6 py-3 text-right bg-slate-50">
-                        <button
-                          type="button"
-                          onClick={() => handleSalesRepSort('target')}
-                          className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500 w-full justify-end"
-                        >
-                          Target
-                          <SortIndicator state={salesRepSort} column="target" />
-                        </button>
-                      </th>
-                      <th className="px-6 py-3 text-center bg-slate-50">
-                        <button
-                          type="button"
-                          onClick={() => handleSalesRepSort('targetHit', SORT_TYPES.text)}
-                          className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500 w-full justify-center"
-                        >
-                          Hit Target
-                          <SortIndicator state={salesRepSort} column="targetHit" />
-                        </button>
-                      </th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
@@ -1384,7 +1377,6 @@ const formatPercentWhole = (value) => {
                         : growthPositive
                         ? 'bg-emerald-50 text-emerald-700'
                         : 'bg-red-50 text-red-700';
-                      const targetBadge = rep.targetHit ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600';
                       return (
                         <tr key={index} className="hover:bg-slate-50 transition-colors">
                           <td className="px-6 py-4 text-center font-medium text-slate-400">#{index + 1}</td>
@@ -1397,14 +1389,6 @@ const formatPercentWhole = (value) => {
                           <td className="px-6 py-4 text-right">
                             <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-semibold ${growthBadge}`}>
                               {formatPercentWhole(rep.growthPct)}
-                            </span>
-                          </td>
-                          <td className="px-6 py-4 text-right font-mono text-slate-600">
-                            {rep.target ? formatCurrencyWhole(rep.target) : '—'}
-                          </td>
-                          <td className="px-6 py-4 text-center">
-                            <span className={`inline-flex px-2 py-1 rounded text-xs font-semibold ${targetBadge}`}>
-                              {rep.targetHit ? 'Yes' : 'No'}
                             </span>
                           </td>
                         </tr>
@@ -1451,10 +1435,6 @@ const formatPercentWhole = (value) => {
                             {isGrowthNa ? 'N/A' : formatPercentWhole(rep.growthPct)}
                           </span>
                         </div>
-                      </div>
-                      <div className="mt-3">
-                        <p className="text-xs text-slate-500 uppercase">Target</p>
-                        <p className="font-mono text-slate-700">{rep.target ? formatCurrencyWhole(rep.target) : '—'}</p>
                       </div>
                     </div>
                   );

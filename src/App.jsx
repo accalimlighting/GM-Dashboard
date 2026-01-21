@@ -109,7 +109,11 @@ const calculatePercentChange = (current, prior) => {
 const formatDeltaLabel = (percentValue, dollarDiff) => {
   const pctText = `${percentValue >= 0 ? '+' : ''}${percentValue.toFixed(1)}%`;
   const diffText = `${dollarDiff >= 0 ? '+' : '-'}${formatCompactCurrency(Math.abs(dollarDiff))}`;
-  return `Vs 2024: ${pctText} (${diffText})`;
+  return (
+    <>
+      Vs 2024: <span className="font-bold">{pctText}</span> ({diffText})
+    </>
+  );
 };
 
 const SORT_TYPES = {
@@ -631,7 +635,7 @@ const formatPercentWhole = (value) => {
                 </div>
               </div>
               <div className="text-2xl font-bold text-slate-900 mb-1">{kpi.value}</div>
-              <div className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${deltaBadge}`}>
+              <div className={`inline-flex px-2.5 py-1 rounded-full text-xs font-medium ${deltaBadge}`}>
                 {kpi.subValue}
               </div>
             </div>

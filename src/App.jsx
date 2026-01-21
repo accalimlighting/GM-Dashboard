@@ -858,12 +858,12 @@ const formatPercentWhole = (value) => {
                                   {isPositive ? '+' : ''}{formatValue(variance.diff, item.format)}
                                 </td>
                                 <td className="px-6 py-4 text-right">
-                                  <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${
+                            <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium ${
                                     variance.isGood 
                                       ? 'bg-emerald-50 text-emerald-700' 
                                       : 'bg-red-50 text-red-700'
                                   }`}>
-                                    {variance.isGood ? <ArrowUpRight className="w-3 h-3 mr-1" /> : <ArrowDownRight className="w-3 h-3 mr-1" />}
+                                    {variance.diff >= 0 ? <ArrowUpRight className="w-3 h-3 mr-1" /> : <ArrowDownRight className="w-3 h-3 mr-1" />}
                                     {variance.pct.toFixed(1)}%
                                   </span>
                                 </td>

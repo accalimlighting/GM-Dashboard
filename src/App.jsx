@@ -45,30 +45,30 @@ const YOY_DATA = [
     category: "Revenue & Profit",
     items: [
       { name: "Total Sales", y2024: 15038228.95, y2025: 17096341.07, format: "currency", invertColor: false },
-      { name: "Cost of Goods Sold", y2024: 10187029.96, y2025: 10349942.61, format: "currency", invertColor: true },
-      { name: "Gross Profit", y2024: 4851198.99, y2025: 6746398.46, format: "currency", invertColor: false },
-      { name: "Gross Margin", y2024: 32.3, y2025: 39.5, format: "percent", invertColor: false },
-      { name: "EBITDA", y2024: -953185.16, y2025: 635229.78, format: "currency", invertColor: false },
-      { name: "EBITDA Margin", y2024: -6.3, y2025: 3.7, format: "percent", invertColor: false },
-      { name: "Net Income", y2024: -1138149.23, y2025: 386450.37, format: "currency", invertColor: false },
+      { name: "Cost of Goods Sold", y2024: 10187029.96, y2025: 10358175.10, format: "currency", invertColor: true },
+      { name: "Gross Profit", y2024: 4851198.99, y2025: 6738165.97, format: "currency", invertColor: false },
+      { name: "Gross Margin", y2024: 32.3, y2025: 39.4, format: "percent", invertColor: false },
+      { name: "EBITDA", y2024: -953185.16, y2025: 505749.81, format: "currency", invertColor: false },
+      { name: "EBITDA Margin", y2024: -6.3, y2025: 3.0, format: "percent", invertColor: false },
+      { name: "Net Income", y2024: -1138149.23, y2025: 222153.70, format: "currency", invertColor: false },
     ]
   },
   {
     category: "Key Expense Drivers",
     items: [
-      { name: "Labor Expenses", y2024: 2089865.44, y2025: 2305718.36, format: "currency", invertColor: true },
-      { name: "Commissions", y2024: 1715290.06, y2025: 1609348.25, format: "currency", invertColor: true },
+      { name: "Labor Expenses", y2024: 2089865.44, y2025: 2386231.43, format: "currency", invertColor: true },
+      { name: "Commissions", y2024: 1715290.06, y2025: 1634886.25, format: "currency", invertColor: true },
       { name: "Tariffs & Duties", y2024: 2348528.42, y2025: 2776282.99, format: "currency", invertColor: true },
-      { name: "Overage Expense", y2024: 740727.26, y2025: 278771.43, format: "currency", invertColor: true },
+      { name: "Overage Expense", y2024: 740727.26, y2025: 281401.83, format: "currency", invertColor: true },
     ]
   },
   {
     category: "Operational Costs",
     items: [
       { name: "Freight In", y2024: 580305.75, y2025: 492159.34, format: "currency", invertColor: true },
-      { name: "Freight Out", y2024: 317068.36, y2025: 325207.36, format: "currency", invertColor: true },
-      { name: "Advertising", y2024: 237228.70, y2025: 217048.76, format: "currency", invertColor: true },
-      { name: "R&D", y2024: 111337.39, y2025: 82776.94, format: "currency", invertColor: true },
+      { name: "Freight Out", y2024: 317068.36, y2025: 335128.30, format: "currency", invertColor: true },
+      { name: "Advertising", y2024: 237228.70, y2025: 221384.01, format: "currency", invertColor: true },
+      { name: "R&D", y2024: 111337.39, y2025: 85127.75, format: "currency", invertColor: true },
       { name: "Trade Shows", y2024: 107151.52, y2025: 62489.51, format: "currency", invertColor: true },
       { name: "Travel", y2024: 165997.20, y2025: 199147.35, format: "currency", invertColor: true },
     ]
@@ -77,19 +77,19 @@ const YOY_DATA = [
 
 const HISTORY_DATA = [
   { month: '2024', sales: 15038228, marginPct: 32.3, ebitda: -953185 },
-  { month: '2025', sales: 17096341, marginPct: 39.5, ebitda: 635230 },
+  { month: '2025', sales: 17096341, marginPct: 39.4, ebitda: 505750 },
 ];
 
 const TOTAL_REVENUE_2024 = 15038228.95;
 const TOTAL_REVENUE_2025 = 17096341.07;
 const GROSS_MARGIN_2024 = 32.3;
-const GROSS_MARGIN_2025 = 39.5;
+const GROSS_MARGIN_2025 = 39.4;
 const GROSS_PROFIT_2024 = 4851198.99;
-const GROSS_PROFIT_2025 = 6746398.46;
+const GROSS_PROFIT_2025 = 6738165.97;
 const EBITDA_2024 = -953185.16;
-const EBITDA_2025 = 635229.78;
+const EBITDA_2025 = 505749.81;
 const NET_INCOME_2024 = -1138149.23;
-const NET_INCOME_2025 = 386450.37;
+const NET_INCOME_2025 = 222153.70;
 
 const ACCESS_STORAGE_KEY = 'acclaim-dashboard-access';
 const APP_PASSWORD = import.meta.env.VITE_DASHBOARD_PASSWORD || '';
@@ -130,33 +130,33 @@ const compareValues = (a, b, type = SORT_TYPES.number) => {
 
 // 1. REVENUE ALLOCATION PIE
 const REVENUE_PIE_DATA = [
-  { name: 'COGS', value: 10349942.61, color: '#EF4444' }, // Red
-  { name: 'Labor', value: 2305718.36, color: '#F59E0B' }, // Orange
-  { name: 'Selling', value: 2694976.18, color: '#FCD34D' }, // Yellow
-  { name: 'OpEx (Admin + Facility)', value: 1110474.14, color: '#6366F1' }, // Indigo
-  { name: 'Net Profit', value: 386450.37, color: '#10B981' }, // Green
-  { name: 'Interest/Tax', value: 248779.41, color: '#94A3B8' }, // Gray
+  { name: 'COGS', value: 10358175.10, color: '#EF4444' }, // Red
+  { name: 'Labor', value: 2386231.43, color: '#F59E0B' }, // Orange
+  { name: 'Selling', value: 2734770.37, color: '#FCD34D' }, // Yellow
+  { name: 'OpEx (Admin + Facility)', value: 1111414.36, color: '#6366F1' }, // Indigo
+  { name: 'Net Profit', value: 222153.70, color: '#10B981' }, // Green
+  { name: 'Interest/Tax', value: 283596.11, color: '#94A3B8' }, // Gray
 ];
 
 // 2. COST EFFICIENCY
 const COST_EFFICIENCY_DATA = [
-  { name: 'COGS', y2024: 67.7, y2025: 60.5 },
-  { name: 'Labor', y2024: 13.9, y2025: 13.5 },
-  { name: 'Selling', y2024: 18.4, y2025: 15.8 },
+  { name: 'COGS', y2024: 67.7, y2025: 60.6 },
+  { name: 'Labor', y2024: 13.9, y2025: 14.0 },
+  { name: 'Selling', y2024: 18.4, y2025: 16.0 },
   { name: 'Admin/Fac', y2024: 6.3, y2025: 6.5 },
 ];
 
 const TOP_EXPENSES_DATA = [
   { name: 'Tariffs & Duties', y2024: 2348528.42, y2025: 2776282.99 },
-  { name: 'Salaries', y2024: 1587365.57, y2025: 1716621.40 },
-  { name: 'Commissions', y2024: 1715290.06, y2025: 1609348.25 },
+  { name: 'Salaries', y2024: 1587365.57, y2025: 1791507.93 },
+  { name: 'Commissions', y2024: 1715290.06, y2025: 1634886.25 },
   { name: 'Freight In', y2024: 580305.75, y2025: 492159.34 },
-  { name: 'Temp Help', y2024: 400510.60, y2025: 475601.70 },
+  { name: 'Temp Help', y2024: 400510.60, y2025: 476017.70 },
 ];
 
 const LABOR_EFFICIENCY_DATA = [
   { year: '2024', labor: 2089865.44, sales: 15038228.95, ratio: 7.20 },
-  { year: '2025', labor: 2305718.36, sales: 17096341.07, ratio: 7.41 },
+  { year: '2025', labor: 2386231.43, sales: 17096341.07, ratio: 7.16 },
 ];
 
 // TOP 20 CUSTOMERS
@@ -320,40 +320,36 @@ const KPI_CARDS = [
     category: "GROSS REVENUE",
     value: formatCompactCurrency(TOTAL_REVENUE_2025),
     subValue: formatDeltaLabel(REVENUE_PCT_DELTA, REVENUE_DOLLAR_DELTA),
+    deltaValue: REVENUE_PCT_DELTA,
     icon: DollarSign,
     color: "bg-blue-50 text-blue-700",
-    status: "Growth",
-    statusColor: "bg-green-100 text-green-800"
   },
   {
     title: "Gross Margin",
     category: "GROSS MARGIN",
-    value: `39.5%`,
+    value: `39.4%`,
     subValue: formatDeltaLabel(GROSS_MARGIN_PCT_DELTA, GROSS_PROFIT_DOLLAR_DELTA),
+    deltaValue: GROSS_MARGIN_PCT_DELTA,
     icon: Activity,
     color: "bg-emerald-50 text-emerald-700",
-    status: "Strong",
-    statusColor: "bg-green-100 text-green-800"
   },
   {
     title: "EBITDA",
     category: "PROFITABILITY (EBITDA)",
     value: formatCompactCurrency(EBITDA_2025),
     subValue: formatDeltaLabel(EBITDA_PCT_DELTA, EBITDA_DOLLAR_DELTA),
+    deltaValue: EBITDA_PCT_DELTA,
     icon: TrendingUp,
     color: "bg-indigo-50 text-indigo-700",
-    status: "Turnaround",
-    statusColor: "bg-green-100 text-green-800"
   },
   {
     title: "Net Income",
     category: "NET INCOME",
     value: formatCompactCurrency(NET_INCOME_2025),
     subValue: formatDeltaLabel(NET_INCOME_PCT_DELTA, NET_INCOME_DOLLAR_DELTA),
+    deltaValue: NET_INCOME_PCT_DELTA,
     icon: PieChart,
     color: "bg-amber-50 text-amber-700",
-    status: "Positive",
-    statusColor: "bg-green-100 text-green-800"
   }
 ];
 
@@ -616,7 +612,15 @@ const formatPercentWhole = (value) => {
       {/* KPI Cards - ONLY ON OVERVIEW */}
       {activeTab === 'overview' && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          {KPI_CARDS.map((kpi, index) => (
+          {KPI_CARDS.map((kpi, index) => {
+            const delta = kpi.deltaValue ?? 0;
+            const deltaBadge =
+              delta > 0
+                ? 'bg-emerald-50 text-emerald-700'
+                : delta < 0
+                ? 'bg-red-50 text-red-700'
+                : 'bg-yellow-50 text-yellow-700';
+            return (
             <div key={index} className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow relative overflow-hidden">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex flex-col">
@@ -625,14 +629,13 @@ const formatPercentWhole = (value) => {
                     <kpi.icon className="w-5 h-5" />
                   </div>
                 </div>
-                <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wide ${kpi.statusColor}`}>
-                  {kpi.status}
-                </span>
               </div>
               <div className="text-2xl font-bold text-slate-900 mb-1">{kpi.value}</div>
-              <div className="text-sm text-slate-500 font-medium">{kpi.subValue}</div>
+              <div className={`inline-flex px-2.5 py-1 rounded-full text-xs font-semibold ${deltaBadge}`}>
+                {kpi.subValue}
+              </div>
             </div>
-          ))}
+          )})}
         </div>
       )}
 

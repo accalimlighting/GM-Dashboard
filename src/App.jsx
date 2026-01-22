@@ -189,20 +189,21 @@ const TOP_CUSTOMERS_DATA = [
 
 // PRODUCT ANALYSIS DATA (Updated with ALL ACL- Classes)
 const PRODUCT_CLASS_DATA = [
-  { name: "Flood", sales: 2033180.94, margin: 61.68 },
-  { name: "Linear", sales: 1124749.07, margin: 72.54 },
-  { name: "Drivers", sales: 537140.19, margin: 67.29 },
-  { name: "Accessories", sales: 495469.26, margin: 71.07 },
-  { name: "Flex Tape", sales: 473888.54, margin: 81.71 },
-  { name: "Flex Tube", sales: 428595.71, margin: 77.54 },
-  { name: "Control", sales: 343418.31, margin: 48.32 },
-  { name: "Image Proj", sales: 313130.00, margin: 45.03 },
-  { name: "Non-Inv", sales: 232200.84, margin: 100.00 },
-  { name: "Direct View", sales: 215139.01, margin: 66.98 },
-  { name: "Cable/Conn", sales: 138856.27, margin: 65.08 },
+  { name: "Flood", sales: 2228072.74, margin: 62.49 },
+  { name: "Linear", sales: 1395352.23, margin: 74.26 },
+  { name: "Drivers", sales: 630723.55, margin: 67.16 },
+  { name: "Accessories", sales: 541433.17, margin: 71.20 },
+  { name: "Flex Tape", sales: 518784.26, margin: 81.70 },
+  { name: "Flex Tube", sales: 613610.00, margin: 77.75 },
+  { name: "Control", sales: 398791.72, margin: 50.78 },
+  { name: "Image Proj", sales: 455530.00, margin: 47.84 },
+  { name: "Non-Inv", sales: 254322.98, margin: 100.00 },
+  { name: "Direct View", sales: 222055.01, margin: 66.65 },
+  { name: "Cable/Conn", sales: 194637.97, margin: 64.93 },
   { name: "Downlights", sales: 51859.95, margin: 34.95 },
-  { name: "Power", sales: 13498.59, margin: 74.97 },
-  { name: "Parts", sales: 7693.00, margin: 62.14 },
+  { name: "Power", sales: 17638.57, margin: 72.58 },
+  { name: "Parts", sales: 10772.20, margin: 65.51 },
+  { name: "LED Lamps", sales: 29101.80, margin: 57.88 },
 ].sort((a, b) => b.sales - a.sales);
 
 const TOP_PRODUCTS_DATA = [

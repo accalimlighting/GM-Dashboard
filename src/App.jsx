@@ -230,48 +230,55 @@ const TOP_PRODUCTS_DATA = [
 
 // SALES REP DATA (final 2024/2025; targets not provided)
 const RAW_SALES_REP_DATA = [
-  { name: "16500", sales2024: 72538.35, sales2025: 39234.20, territory: "USA West" },
-  { name: "2M LIGHT (AL2MLI210)", sales2024: 142150.06, sales2025: 140866.39, territory: "USA West" },
-  { name: "ARIZONA LIGHT (ALSI602)", sales2024: 913332.72, sales2025: 286516.27, territory: "USA West" },
-  { name: "BUILD 26", sales2024: 101052.30, sales2025: 64968.62, territory: "USA West" },
-  { name: "CT LIGHTING (ALCTLI303)", sales2024: 88279.98, sales2025: 79760.25, territory: "USA West" },
-  { name: "IDAHO", sales2024: 5505.04, sales2025: 4575.94, territory: "USA West" },
-  { name: "LEGACY LTG (ALLEGA512)", sales2024: 36721.67, sales2025: 79272.11, territory: "USA West" },
-  { name: "LGNW (ALLIGH206)", sales2024: 27964.06, sales2025: 481317.44, territory: "USA West" },
-  { name: "OCS LIGHT (ALOCSL858)", sales2024: 350176.09, sales2025: 48745.36, territory: "USA West" },
-  { name: "PLP SOCAL (ALPLPS213)", sales2024: 261604.05, sales2025: 434709.37, territory: "USA West" },
-  { name: "PSA LIGHT (ALPSAL713)", sales2024: 789732.86, sales2025: 462718.31, territory: "USA West" },
-  { name: "SUNBURST (ALSUNB808)", sales2024: 275777.15, sales2025: 45022.63, territory: "USA West" },
-  { name: "TEXAS LIGHTI (ALTEXA817)", sales2024: 426362.16, sales2025: 476264.33, territory: "USA West" },
-  { name: "CLEAR ADVANTAGE", sales2024: 148902.66, sales2025: 145656.44, territory: "USA Central" },
-  { name: "CM BUCK (ALCMBU317)", sales2024: 135286.34, sales2025: 66413.55, territory: "USA Central" },
-  { name: "HOSSLEY (ALHOSS214)", sales2024: 64937.00, sales2025: 336807.40, territory: "USA Central" },
-  { name: "JAW LIGHTING", sales2024: 562.09, sales2025: 122238.24, territory: "USA Central" },
-  { name: "LDI OHIO (ALLDIO330)", sales2024: 72643.44, sales2025: 57075.36, territory: "USA Central" },
-  { name: "LD INC. (ALLIGH954)", sales2024: 565454.18, sales2025: 478038.77, territory: "USA Central" },
-  { name: "LDA PR", sales2024: 0, sales2025: 46325.60, territory: "USA Central" },
-  { name: "LEESMAN", sales2024: 0, sales2025: 29660.74, territory: "USA Central" },
-  { name: "LIGHT ASSOC.", sales2024: 583284.28, sales2025: 297177.78, territory: "USA Central" },
-  { name: "LIGHT SOLUTI (ALLIGH205)", sales2024: 252185.93, sales2025: 242782.73, territory: "USA Central" },
-  { name: "LIGHT PARTNERS (ALLIGH852)", sales2024: 904886.19, sales2025: 191681.19, territory: "USA Central" },
-  { name: "LIGHT TREND (ALLIGH865)", sales2024: 5470.10, sales2025: 70903.43, territory: "USA Central" },
-  { name: "MERCER (ALMERC913)", sales2024: 304302.09, sales2025: 435873.81, territory: "USA Central" },
-  { name: "MLS EAST (ALMLSE248)", sales2024: 212126.48, sales2025: 307317.79, territory: "USA Central" },
-  { name: "MLS WEST (ALMLSW??)", sales2024: 102364.19, sales2025: 76817.14, territory: "USA Central" },
-  { name: "RL (ALMLAZ952)", sales2024: 403497.07, sales2025: 498543.28, territory: "USA Central" },
-  { name: "TAMPA BAY (ALTAMP813)", sales2024: 632319.78, sales2025: 202567.54, territory: "USA Central" },
-  { name: "THE LIGHTING DIGEST (ALTLDL630)", sales2024: 261534.16, sales2025: 70213.85, territory: "USA Central" },
-  { name: "ARDD&WINTER (ALARDD770)", sales2024: 201406.39, sales2025: 897206.96, territory: "USA East" },
-  { name: "CROWN", sales2024: 53421.00, sales2025: 1897.82, territory: "USA East" },
-  { name: "CHESAPEAKE (ALCHES301)", sales2024: 598764.11, sales2025: 205029.81, territory: "USA East" },
-  { name: "FRM LIGHTING", sales2024: 0, sales2025: 1672.92, territory: "USA East" },
-  { name: "ILLUMINATIONS (ALILLU610)", sales2024: 383443.18, sales2025: 1703977.50, territory: "USA East" },
-  { name: "ITL LIGHT (ALINTE212)", sales2024: 654544.46, sales2025: 365679.51, territory: "USA East" },
-  { name: "KB STEPHENS (ALKBST919)", sales2024: 52297.36, sales2025: 105812.36, territory: "USA East" },
-  { name: "OMNILITE (ALILLU781)", sales2024: 580931.91, sales2025: 442999.96, territory: "USA East" },
-  { name: "PSGI", sales2024: 0, sales2025: 1204452.26, territory: "USA East" },
-  { name: "RL VANSTORY", sales2024: 129956.89, sales2025: 31653.20, territory: "USA East" },
-  { name: "THOMAS", sales2024: 45589.07, sales2025: 141582.81, territory: "USA East" },
+  { name: "16500 Inc", sales2024: 72538.35, sales2025: 59014.94, territory: "West" },
+  { name: "2M Lighting", sales2024: 142150.06, sales2025: 156127.04, territory: "West" },
+  { name: "Ardd & Winter", sales2024: 550497.18, sales2025: 945662.20, territory: "East" },
+  { name: "Audio Source", sales2024: 0, sales2025: 60767.99, territory: "Entertainment" },
+  { name: "Arizona Lighting Sales", sales2024: 913332.72, sales2025: 588268.10, territory: "West" },
+  { name: "Build 26", sales2024: 101052.30, sales2025: 77232.02, territory: "West" },
+  { name: "Chesapeake Lighting", sales2024: 565800.03, sales2025: 260586.48, territory: "East" },
+  { name: "Clear Advantage Lighting", sales2024: 148902.66, sales2025: 144694.92, territory: "Central" },
+  { name: "CM Buck & Associates", sales2024: 135286.34, sales2025: 66413.55, territory: "Central" },
+  { name: "CT Lighting & Controls", sales2024: 88279.98, sales2025: 123225.40, territory: "West" },
+  { name: "Eric Loader / JPI", sales2024: 0, sales2025: 492344.68, territory: "Entertainment" },
+  { name: "Five Lakes Marketing", sales2024: 0, sales2025: 162742.00, territory: "Entertainment" },
+  { name: "Freed Sales", sales2024: 0, sales2025: 518551.85, territory: "Entertainment" },
+  { name: "FRM Lighting & Controls", sales2024: 0, sales2025: 1672.92, territory: "East" },
+  { name: "The Healy Group", sales2024: 0, sales2025: 309536.60, territory: "Entertainment" },
+  { name: "Hossley Lighting & Power", sales2024: 64937.00, sales2025: 337512.55, territory: "Central" },
+  { name: "Idaho Lighting Solutions", sales2024: 5505.04, sales2025: 10423.69, territory: "West" },
+  { name: "Illuminate", sales2024: 633625.17, sales2025: 537277.08, territory: "East" },
+  { name: "Illuminations Inc", sales2024: 1524921.63, sales2025: 2102712.74, territory: "East" },
+  { name: "International Lights", sales2024: 733991.07, sales2025: 500733.42, territory: "East" },
+  { name: "JAW Lighting", sales2024: 562.09, sales2025: 153019.24, territory: "Central" },
+  { name: "K.B. Stephens", sales2024: 52930.40, sales2025: 196705.36, territory: "East" },
+  { name: "Kraig Knight", sales2024: 4353.00, sales2025: 4353.00, territory: "Entertainment" },
+  { name: "LDA Incorporado", sales2024: 0, sales2025: 56688.00, territory: "Central" },
+  { name: "Leesman Lighting Sales", sales2024: 0, sales2025: 29660.74, territory: "Central" },
+  { name: "Legacy Lighting", sales2024: 36721.67, sales2025: 100676.68, territory: "West" },
+  { name: "Lighting Associates", sales2024: 583284.28, sales2025: 320438.71, territory: "Central" },
+  { name: "Lighting Dynamics - Florida", sales2024: 565454.18, sales2025: 486369.80, territory: "Central" },
+  { name: "Lighting Dynamics - Ohio", sales2024: 72643.44, sales2025: 72142.55, territory: "Central" },
+  { name: "Lighting Partners of Central Florida", sales2024: 904886.19, sales2025: 191681.19, territory: "Central" },
+  { name: "Lighting Solutions of Alabama", sales2024: 252185.93, sales2025: 265090.36, territory: "Central" },
+  { name: "Lighting Trends", sales2024: 5470.10, sales2025: 70903.43, territory: "Central" },
+  { name: "Mercer Zimmerman", sales2024: 304302.09, sales2025: 447765.14, territory: "Central" },
+  { name: "Michagan Lighting Sales - East", sales2024: 212126.48, sales2025: 553022.06, territory: "Central" },
+  { name: "Michagan Lighting Sales - West", sales2024: 102364.19, sales2025: 76817.14, territory: "Central" },
+  { name: "Mlazgar Associates", sales2024: 403497.07, sales2025: 522019.21, territory: "Central" },
+  { name: "OCS Lighting + Control", sales2024: 350176.09, sales2025: 114964.11, territory: "West" },
+  { name: "Peterson Scharck & Associates", sales2024: 789732.86, sales2025: 600817.48, territory: "West" },
+  { name: "PLP So Cal", sales2024: 261604.05, sales2025: 768056.53, territory: "West" },
+  { name: "Point Source Group", sales2024: 972190.00, sales2025: 414566.90, territory: "East" },
+  { name: "Rimmer Lighting", sales2024: 0, sales2025: 102640.35, territory: "Mexico" },
+  { name: "Rite Lites", sales2024: 0, sales2025: 465590.47, territory: "Canada" },
+  { name: "R.L. Vanstory", sales2024: 129683.00, sales2025: 30838.35, territory: "East" },
+  { name: "Sunburst Designs", sales2024: 275777.15, sales2025: 51184.63, territory: "West" },
+  { name: "Tampa Bay Lighting", sales2024: 632319.78, sales2025: 261964.04, territory: "Central" },
+  { name: "Texas Lighting", sales2024: 426362.16, sales2025: 536568.76, territory: "West" },
+  { name: "The Lighting Digest", sales2024: 261534.16, sales2025: 71087.84, territory: "Central" },
+  { name: "The Lighting Group", sales2024: 27964.06, sales2025: 745943.94, territory: "West" },
+  { name: "Thomas Harris & Co", sales2024: 37175.56, sales2025: 2109421.06, territory: "East" },
 ].filter((rep) => rep.sales2025 > 0);
 
 const SALES_REP_DATA = RAW_SALES_REP_DATA
@@ -293,7 +300,13 @@ const SALES_REP_DATA = RAW_SALES_REP_DATA
   .sort((a, b) => b.sales2025 - a.sales2025);
 
 const REGION_SUMMARY = (() => {
-  const base = { 'USA West': { sales2024: 0, sales2025: 0 }, 'USA Central': { sales2024: 0, sales2025: 0 }, 'USA East': { sales2024: 0, sales2025: 0 } };
+  const base = {
+    West: { sales2024: 0, sales2025: 0 },
+    Central: { sales2024: 0, sales2025: 0 },
+    East: { sales2024: 0, sales2025: 0 },
+    Canada: { sales2024: 0, sales2025: 0 },
+    Mexico: { sales2024: 0, sales2025: 0 },
+  };
   SALES_REP_DATA.forEach((rep) => {
     const bucket = base[rep.territory];
     if (bucket) {
@@ -304,8 +317,7 @@ const REGION_SUMMARY = (() => {
   return Object.entries(base).map(([territory, vals]) => {
     const growthAmt = vals.sales2025 - vals.sales2024;
     const growthPct = vals.sales2024 > 0 ? (growthAmt / vals.sales2024) * 100 : null;
-    const label = territory.replace('USA ', '');
-    return { territory, label, ...vals, growthAmt, growthPct };
+    return { territory, label: territory, ...vals, growthAmt, growthPct };
   });
 })();
 
@@ -1287,6 +1299,8 @@ const formatPercentWhole = (value) => {
                 <div className="absolute inset-0">
                   {(() => {
                     const positions = {
+                      Canada: { top: '18%', left: '58%' },
+                      Mexico: { top: '18%', left: '42%' },
                       West: { top: '62%', left: '20%' },
                       Central: { top: '55%', left: '50%' },
                       East: { top: '48%', left: '78%' },

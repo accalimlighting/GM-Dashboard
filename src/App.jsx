@@ -1360,21 +1360,21 @@ const formatPercentWhole = (value) => {
                       <th className="px-6 py-3 text-right bg-slate-50">
                         <button
                           type="button"
-                          onClick={() => handleSalesRepSort('sales2024')}
-                          className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500 w-full justify-end"
-                        >
-                          2024 Sales
-                          <SortIndicator state={salesRepSort} column="sales2024" />
-                        </button>
-                      </th>
-                      <th className="px-6 py-3 text-right bg-slate-50">
-                        <button
-                          type="button"
                           onClick={() => handleSalesRepSort('sales2025')}
                           className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500 w-full justify-end"
                         >
                           2025 Sales
                           <SortIndicator state={salesRepSort} column="sales2025" />
+                        </button>
+                      </th>
+                      <th className="px-6 py-3 text-right bg-slate-50">
+                        <button
+                          type="button"
+                          onClick={() => handleSalesRepSort('sales2024')}
+                          className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500 w-full justify-end"
+                        >
+                          2024 Sales
+                          <SortIndicator state={salesRepSort} column="sales2024" />
                         </button>
                       </th>
                       <th className="px-6 py-3 text-right bg-slate-50">
@@ -1412,8 +1412,8 @@ const formatPercentWhole = (value) => {
                         <tr key={index} className="hover:bg-slate-50 transition-colors">
                           <td className="px-6 py-4 text-center font-medium text-slate-400">#{index + 1}</td>
                           <td className="px-6 py-4 font-medium text-slate-900">{rep.name}</td>
-                          <td className="px-6 py-4 text-right font-mono text-slate-600">{formatCurrencyWhole(rep.sales2024)}</td>
                           <td className="px-6 py-4 text-right font-mono text-slate-900">{formatCurrencyWhole(rep.sales2025)}</td>
+                          <td className="px-6 py-4 text-right font-mono text-slate-600">{formatCurrencyWhole(rep.sales2024)}</td>
                           <td className={`px-6 py-4 text-right font-mono ${growthPositive ? 'text-emerald-600' : 'text-red-600'}`}>
                             {formatSignedCurrency(rep.growthAmt)}
                           </td>

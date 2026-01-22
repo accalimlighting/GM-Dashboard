@@ -240,7 +240,7 @@ const RAW_SALES_REP_DATA = [
   { name: "Clear Advantage Lighting", sales2024: 148902.66, sales2025: 144694.92, territory: "Central" },
   { name: "CM Buck & Associates", sales2024: 135286.34, sales2025: 66413.55, territory: "Central" },
   { name: "CT Lighting & Controls", sales2024: 88279.98, sales2025: 123225.40, territory: "West" },
-  { name: "Eric Loader / JPI", sales2024: 0, sales2025: 492344.68, territory: "Entertainment" },
+  { name: "Eric Loader", sales2024: 0, sales2025: 492344.68, territory: "Entertainment" },
   { name: "Five Lakes Marketing", sales2024: 0, sales2025: 162742.00, territory: "Entertainment" },
   { name: "Freed Sales", sales2024: 0, sales2025: 518551.85, territory: "Entertainment" },
   { name: "FRM Lighting & Controls", sales2024: 0, sales2025: 1672.92, territory: "East" },

@@ -1303,9 +1303,9 @@ const formatPercentWhole = (value) => {
                       Canada: { top: '18%', left: '64%' },
                       Mexico: { top: '78%', left: '45%' },
                       West: { top: '62%', left: '20%' },
-                      Central: { top: '55%', left: '50%' },
-                      East: { top: '46%', left: '82%' },
-                      Entertainment: { top: '78%', left: '82%' },
+                      Central: { top: '48%', left: '50%' },
+                      East: { top: '42%', left: '82%' },
+                      Entertainment: { top: '86%', left: '90%' },
                     };
                     return Object.entries(positions).map(([label, pos]) => {
                       const region = REGION_SUMMARY.find((r) => r.label === label);

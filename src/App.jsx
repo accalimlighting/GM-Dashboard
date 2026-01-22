@@ -306,6 +306,7 @@ const REGION_SUMMARY = (() => {
     East: { sales2024: 0, sales2025: 0 },
     Canada: { sales2024: 0, sales2025: 0 },
     Mexico: { sales2024: 0, sales2025: 0 },
+    Entertainment: { sales2024: 0, sales2025: 0 },
   };
   SALES_REP_DATA.forEach((rep) => {
     const bucket = base[rep.territory];
@@ -1300,10 +1301,11 @@ const formatPercentWhole = (value) => {
                   {(() => {
                     const positions = {
                       Canada: { top: '18%', left: '58%' },
-                      Mexico: { top: '18%', left: '42%' },
+                      Mexico: { top: '74%', left: '50%' },
                       West: { top: '62%', left: '20%' },
                       Central: { top: '55%', left: '50%' },
                       East: { top: '48%', left: '78%' },
+                      Entertainment: { top: '74%', left: '80%' },
                     };
                     return Object.entries(positions).map(([label, pos]) => {
                       const region = REGION_SUMMARY.find((r) => r.label === label);

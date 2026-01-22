@@ -1300,12 +1300,12 @@ const formatPercentWhole = (value) => {
                 <div className="absolute inset-0">
                   {(() => {
                     const positions = {
-                      Canada: { top: '18%', left: '58%' },
-                      Mexico: { top: '74%', left: '50%' },
+                      Canada: { top: '18%', left: '64%' },
+                      Mexico: { top: '78%', left: '45%' },
                       West: { top: '62%', left: '20%' },
                       Central: { top: '55%', left: '50%' },
-                      East: { top: '48%', left: '78%' },
-                      Entertainment: { top: '74%', left: '80%' },
+                      East: { top: '46%', left: '82%' },
+                      Entertainment: { top: '78%', left: '82%' },
                     };
                     return Object.entries(positions).map(([label, pos]) => {
                       const region = REGION_SUMMARY.find((r) => r.label === label);
@@ -1314,6 +1314,7 @@ const formatPercentWhole = (value) => {
                       const badge =
                         isNa ? 'bg-slate-100 text-slate-600' : region.growthPct >= 0 ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700';
                       const growthLabel = isNa ? 'N/A' : `${region.growthPct >= 0 ? '+' : ''}${region.growthPct.toFixed(1)}%`;
+                      const showGrowthPill = label !== 'Entertainment';
                       return (
                         <div
                           key={label}
@@ -1322,7 +1323,9 @@ const formatPercentWhole = (value) => {
                         >
                           <div className="flex items-center justify-between mb-1">
                             <span className="text-xs font-semibold uppercase tracking-wide text-slate-600">{label}</span>
-                            <span className={`px-2 py-0.5 rounded text-[11px] font-semibold ${badge}`}>{growthLabel}</span>
+                            {showGrowthPill && (
+                              <span className={`px-2 py-0.5 rounded text-[11px] font-semibold ${badge}`}>{growthLabel}</span>
+                            )}
                           </div>
                           <div className="text-base font-bold text-slate-900">{formatCurrencyWhole(region.sales2025)}</div>
                           <p className="text-[11px] text-slate-500">2024: {formatCurrencyWhole(region.sales2024)}</p>

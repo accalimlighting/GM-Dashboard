@@ -913,7 +913,7 @@ const formatPercentWhole = (value) => {
                   <BarChart 
                     data={TOP_CUSTOMERS_DATA} 
                     layout="vertical" 
-                    margin={{ top: 5, right: 30, left: 60, bottom: 5 }}
+                    margin={{ top: 5, right: 24, left: 180, bottom: 5 }}
                     barSize={20}
                   >
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
@@ -921,7 +921,7 @@ const formatPercentWhole = (value) => {
                     <YAxis 
                       type="category" 
                       dataKey="name" 
-                      width={140} 
+                      width={220} 
                       tick={{fontSize: 11, fill: '#1e293b'}} 
                       interval={0}
                     />

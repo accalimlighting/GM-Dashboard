@@ -178,29 +178,33 @@ const LABOR_EFFICIENCY_DATA = [
   { year: CURRENT_LABEL, labor: 1761804.15, sales: 12397099.10, ratio: 7.04 },
 ];
 
-// TOP 20 CUSTOMERS
+// TOP 20 CUSTOMERS — Q3 2026 (Jul–Sep) invoiced sales net of credit memos.
+// Source: Acumatica AR invoice export "Q3 RESULTS 2026.xlsx", sheet "Q3 JUL-SEPT 2026 INVOICE".
+const CUSTOMER_PERIOD_LABEL = 'Q3 2026 (Jul–Sep)';
+const CUSTOMER_PERIOD_TOTAL = 4518778.37; // all invoices in the export, used as the share denominator
 const TOP_CUSTOMERS_DATA = [
-  { rank: 1, name: "State Electric Supply Co", value: 1011702.80 },
-  { rank: 2, name: "Electric & Communications Sply", value: 763471.00 },
-  { rank: 3, name: "Joseph Productions, Inc.", value: 658730.00 },
-  { rank: 4, name: "McNaughton-McKay Electric", value: 444958.25 },
-  { rank: 5, name: "US - Yale Electric dba US Electrical Sup", value: 444063.24 },
-  { rank: 6, name: "Graybar", value: 400716.86 },
-  { rank: 7, name: "SP - World Electric Supply", value: 398497.59 },
-  { rank: 8, name: "Volt Lites Inc", value: 318802.00 },
-  { rank: 9, name: "BS - Border States Electric", value: 214730.96 },
-  { rank: 10, name: "Wesco Distributions - UT", value: 195708.64 },
-  { rank: 11, name: "Anixter Power Solutions", value: 168003.18 },
-  { rank: 12, name: "Van Meter Inc - Davenport", value: 167314.00 },
-  { rank: 13, name: "Bandit Lites, Inc", value: 166424.60 },
-  { rank: 14, name: "Litemor", value: 154187.50 },
-  { rank: 15, name: "Dakota Supply Group", value: 150627.28 },
-  { rank: 16, name: "Turtle and Hughes", value: 143045.00 },
-  { rank: 17, name: "Colonial Electric Supply Co.", value: 137609.25 },
-  { rank: 18, name: "Lonestar Electric Supply-Houston", value: 125371.02 },
-  { rank: 19, name: "Elliott Electric Supply", value: 120975.26 },
-  { rank: 20, name: "SP - Crawford Electric", value: 119002.95 },
+  { rank: 1, name: "GRAYBAR", value: 556183.83 },
+  { rank: 2, name: "AMERICAN ELECTRIC SUPPLY", value: 195134.25 },
+  { rank: 3, name: "RITE LITES", value: 189177.69 },
+  { rank: 4, name: "DISNEYLAND RESORT - DWSS AP", value: 187649.43 },
+  { rank: 5, name: "ANIXTER POWER SOLUTIONS", value: 164510.21 },
+  { rank: 6, name: "LUMENTENDER CONTROL SOLUCTIONS", value: 159207.92 },
+  { rank: 7, name: "RIMMER LIGHTING", value: 148260.48 },
+  { rank: 8, name: "POWER DESIGN RESOURCES", value: 125084.80 },
+  { rank: 9, name: "REGENCY LIGHTING", value: 124159.40 },
+  { rank: 10, name: "LITEMOR", value: 119966.60 },
+  { rank: 11, name: "CED - MILLER ELECTRIC", value: 118676.60 },
+  { rank: 12, name: "SKYLINE ARTS LLC", value: 102013.96 },
+  { rank: 13, name: "LED SMITH / LED SYSTEMS", value: 83718.00 },
+  { rank: 14, name: "JOSEPH PRODUCTIONS, INC.", value: 83200.00 },
+  { rank: 15, name: "PLATT .COM", value: 80473.00 },
+  { rank: 16, name: "THE LOEB ELECTRIC CO", value: 78832.93 },
+  { rank: 17, name: "MAYER ELECTRIC  SUPPLY", value: 66933.45 },
+  { rank: 18, name: "MCNAUGHTON-MCKAY ELECTRIC", value: 61281.24 },
+  { rank: 19, name: "SOLOTECH US", value: 58343.62 },
+  { rank: 20, name: "CED- CLEVELAND", value: 53696.88 },
 ];
+const TOP_CUSTOMERS_TOTAL = TOP_CUSTOMERS_DATA.reduce((sum, c) => sum + c.value, 0);
 
 // PRODUCT ANALYSIS DATA (Updated with ALL ACL- Classes)
 const PRODUCT_CLASS_DATA = [
@@ -244,96 +248,104 @@ const TOP_PRODUCTS_DATA = [
   { rank: 20, sku: "XED-LXCV-OPXQ", desc: "Linear One DMX Ext Core 4' RGBW 30x60", sales: 76797.00 },
 ];
 
-// SALES REP DATA (final 2024/2025; targets not provided)
+// SALES REP DATA — invoiced sales by default salesperson, Jan–Sep 2025 (prior) vs Jan–Sep 2026 (current).
+// Source: "Q3 RESULTS 2026.xlsx", sheet "Q3 2026 INVOICE SUMMARY" (Q1+Q2+Q3 of each year); territories from the
+// EAST / CENTRAL / WEST tabs plus the existing Entertainment / Canada / Mexico assignments. "Other" = not on any tab.
 const RAW_SALES_REP_DATA = [
-  { name: "16500 Inc", sales2024: 72538.35, sales2025: 59014.94, territory: "West" },
-  { name: "2M Lighting", sales2024: 142150.06, sales2025: 156127.04, territory: "West" },
-  { name: "Ardd & Winter", sales2024: 550497.18, sales2025: 945662.20, territory: "East" },
-  { name: "Audio Source", sales2024: 0, sales2025: 60767.99, territory: "Entertainment" },
-  { name: "Arizona Lighting Sales", sales2024: 913332.72, sales2025: 588268.10, territory: "West" },
-  { name: "Build 26", sales2024: 101052.30, sales2025: 77232.02, territory: "West" },
-  { name: "Chesapeake Lighting", sales2024: 565800.03, sales2025: 260586.48, territory: "East" },
-  { name: "Clear Advantage Lighting", sales2024: 148902.66, sales2025: 144694.92, territory: "Central" },
-  { name: "CM Buck & Associates", sales2024: 135286.34, sales2025: 66413.55, territory: "Central" },
-  { name: "CT Lighting & Controls", sales2024: 88279.98, sales2025: 123225.40, territory: "West" },
-  { name: "Eric Loader", sales2024: 0, sales2025: 492344.68, territory: "Entertainment" },
-  { name: "Five Lakes Marketing", sales2024: 0, sales2025: 162742.00, territory: "Entertainment" },
-  { name: "Freed Sales", sales2024: 0, sales2025: 518551.85, territory: "Entertainment" },
-  { name: "FRM Lighting & Controls", sales2024: 0, sales2025: 1672.92, territory: "East" },
-  { name: "The Healy Group", sales2024: 0, sales2025: 309536.60, territory: "Entertainment" },
-  { name: "Hossley Lighting & Power", sales2024: 64937.00, sales2025: 337512.55, territory: "Central" },
-  { name: "Idaho Lighting Solutions", sales2024: 5505.04, sales2025: 10423.69, territory: "West" },
-  { name: "Illuminate", sales2024: 633625.17, sales2025: 537277.08, territory: "East" },
-  { name: "Illuminations Inc", sales2024: 1524921.63, sales2025: 2102712.74, territory: "East" },
-  { name: "International Lights", sales2024: 733991.07, sales2025: 500733.42, territory: "East" },
-  { name: "JAW Lighting", sales2024: 562.09, sales2025: 153019.24, territory: "Central" },
-  { name: "K.B. Stephens", sales2024: 52930.40, sales2025: 196705.36, territory: "East" },
-  { name: "Kraig Knight", sales2024: 4353.00, sales2025: 4353.00, territory: "Entertainment" },
-  { name: "LDA Incorporado", sales2024: 0, sales2025: 56688.00, territory: "Central" },
-  { name: "Leesman Lighting Sales", sales2024: 0, sales2025: 29660.74, territory: "Central" },
-  { name: "Legacy Lighting", sales2024: 36721.67, sales2025: 100676.68, territory: "West" },
-  { name: "Lighting Associates", sales2024: 583284.28, sales2025: 320438.71, territory: "Central" },
-  { name: "Lighting Dynamics - Florida", sales2024: 565454.18, sales2025: 486369.80, territory: "Central" },
-  { name: "Lighting Dynamics - Ohio", sales2024: 72643.44, sales2025: 72142.55, territory: "Central" },
-  { name: "Lighting Partners of Central Florida", sales2024: 904886.19, sales2025: 191681.19, territory: "Central" },
-  { name: "Lighting Solutions of Alabama", sales2024: 252185.93, sales2025: 265090.36, territory: "Central" },
-  { name: "Lighting Trends", sales2024: 5470.10, sales2025: 70903.43, territory: "Central" },
-  { name: "Mercer Zimmerman", sales2024: 304302.09, sales2025: 447765.14, territory: "Central" },
-  { name: "Michagan Lighting Sales - East", sales2024: 212126.48, sales2025: 553022.06, territory: "Central" },
-  { name: "Michagan Lighting Sales - West", sales2024: 102364.19, sales2025: 76817.14, territory: "Central" },
-  { name: "Mlazgar Associates", sales2024: 403497.07, sales2025: 522019.21, territory: "Central" },
-  { name: "OCS Lighting + Control", sales2024: 350176.09, sales2025: 114964.11, territory: "West" },
-  { name: "Peterson Scharck & Associates", sales2024: 789732.86, sales2025: 600817.48, territory: "West" },
-  { name: "PLP So Cal", sales2024: 261604.05, sales2025: 768056.53, territory: "West" },
-  { name: "Point Source Group", sales2024: 972190.00, sales2025: 414566.90, territory: "East" },
-  { name: "Rimmer Lighting", sales2024: 0, sales2025: 102640.35, territory: "Mexico" },
-  { name: "Rite Lites", sales2024: 0, sales2025: 465590.47, territory: "Canada" },
-  { name: "R.L. Vanstory", sales2024: 129683.00, sales2025: 30838.35, territory: "East" },
-  { name: "Sunburst Designs", sales2024: 275777.15, sales2025: 51184.63, territory: "West" },
-  { name: "Tampa Bay Lighting", sales2024: 632319.78, sales2025: 261964.04, territory: "Central" },
-  { name: "Texas Lighting", sales2024: 426362.16, sales2025: 536568.76, territory: "West" },
-  { name: "The Lighting Digest", sales2024: 261534.16, sales2025: 71087.84, territory: "Central" },
-  { name: "The Lighting Group", sales2024: 27964.06, sales2025: 745943.94, territory: "West" },
-  { name: "Thomas Harris & Co", sales2024: 37175.56, sales2025: 2109421.06, territory: "East" },
-].filter((rep) => rep.sales2025 > 0);
+  { id: "ALILLU610", name: "Illuminations Inc", salesPrior: 1570693.07, salesCurrent: 1345275.22, territory: "East" },
+  { id: "ALPLPS213", name: "PLP So Cal", salesPrior: 399106.62, salesCurrent: 931076.66, territory: "West" },
+  { id: "ALCALS901", name: "Clear Advantage Lighting", salesPrior: 139033.49, salesCurrent: 793024.37, territory: "Central" },
+  { id: "ALARDD770", name: "Ardd & Winter", salesPrior: 636243.47, salesCurrent: 600302.21, territory: "East" },
+  { id: "ALLIGH954", name: "Lighting Dynamics - Florida", salesPrior: 275467.90, salesCurrent: 537284.75, territory: "Central" },
+  { id: "ALILLU781", name: "Illuminate (Omnilite)", salesPrior: 348255.50, salesCurrent: 472941.15, territory: "East" },
+  { id: "ALPSAL713", name: "Peterson Scharck & Associates", salesPrior: 265099.75, salesCurrent: 465611.84, territory: "West" },
+  { id: "ALFRSA305", name: "Freed Sales", salesPrior: 338081.73, salesCurrent: 445992.13, territory: "Entertainment" },
+  { id: "ALRITE514", name: "Rite Lites", salesPrior: 348896.15, salesCurrent: 429827.02, territory: "Canada" },
+  { id: "ALTEXA817", name: "Texas Lighting", salesPrior: 366914.38, salesCurrent: 411177.40, territory: "West" },
+  { id: "ALTHOM804", name: "Thomas Harris & Co", salesPrior: 140064.49, salesCurrent: 325674.17, territory: "East" },
+  { id: "ALMERC913", name: "Mercer Zimmerman", salesPrior: 329952.08, salesCurrent: 310179.14, territory: "Central" },
+  { id: "ALTAMP813", name: "Tampa Bay Lighting", salesPrior: 176900.03, salesCurrent: 303387.10, territory: "Central" },
+  { id: "ALSKYL561", name: "Skyline", salesPrior: 0.00, salesCurrent: 297938.60, territory: "Other" },
+  { id: "ALSUNB808", name: "Sunburst Designs", salesPrior: 16772.13, salesCurrent: 287230.58, territory: "West" },
+  { id: "ALMLAZ952", name: "Mlazgar Associates", salesPrior: 329678.59, salesCurrent: 280809.29, territory: "Central" },
+  { id: "ALTLDL630", name: "The Lighting Digest", salesPrior: 50297.85, salesCurrent: 234371.34, territory: "Central" },
+  { id: "ALRIMM840", name: "Rimmer Lighting", salesPrior: 90870.02, salesCurrent: 199105.60, territory: "Mexico" },
+  { id: "ALLIGH314", name: "Lighting Associates", salesPrior: 250489.08, salesCurrent: 191970.41, territory: "Central" },
+  { id: "ALLEGA512", name: "Legacy Lighting", salesPrior: 59999.93, salesCurrent: 190219.31, territory: "West" },
+  { id: "ALLIGH206", name: "The Lighting Group (LGNW)", salesPrior: 428291.29, salesCurrent: 188724.41, territory: "West" },
+  { id: "ALCHES301", name: "Chesapeake Lighting", salesPrior: 251682.22, salesCurrent: 183510.35, territory: "East" },
+  { id: "ALLIGH852", name: "Lighting Partners of Central Florida", salesPrior: 131707.16, salesCurrent: 175165.24, territory: "Central" },
+  { id: "ALMLSE248", name: "Michigan Lighting Sales - East", salesPrior: 91654.99, salesCurrent: 167925.25, territory: "Central" },
+  { id: "ALOCSL858", name: "OCS Lighting + Control", salesPrior: 29123.05, salesCurrent: 121197.97, territory: "West" },
+  { id: "ALALSI602", name: "Arizona Lighting Sales", salesPrior: 225889.21, salesCurrent: 118352.25, territory: "West" },
+  { id: "AL2MLI210", name: "2M Lighting", salesPrior: 89018.23, salesCurrent: 112328.57, territory: "West" },
+  { id: "ALLIGH205", name: "Lighting Solutions of Alabama", salesPrior: 163585.48, salesCurrent: 100973.39, territory: "Central" },
+  { id: "ALBUIL801", name: "Build 26", salesPrior: 26409.80, salesCurrent: 99477.54, territory: "West" },
+  { id: "ALHOSS214", name: "Hossley Lighting & Power", salesPrior: 268122.56, salesCurrent: 79757.69, territory: "Central" },
+  { id: "ALCTLI303", name: "CT Lighting & Controls", salesPrior: 24033.54, salesCurrent: 66332.28, territory: "West" },
+  { id: "ALFIVE248", name: "Five Lakes Marketing", salesPrior: 53986.77, salesCurrent: 61726.82, territory: "Entertainment" },
+  { id: "ALSIXT510", name: "16500 Inc", salesPrior: 36862.75, salesCurrent: 49206.62, territory: "West" },
+  { id: "ALTRIP664", name: "Triple C", salesPrior: 0.00, salesCurrent: 43900.61, territory: "Central" },
+  { id: "ALPSGI585", name: "Point Source Group", salesPrior: 1160808.15, salesCurrent: 39370.50, territory: "East" },
+  { id: "ALLDAI787", name: "LDA Incorporado", salesPrior: 46325.60, salesCurrent: 35014.30, territory: "Central" },
+  { id: "ALFRML770", name: "FRM Lighting & Controls", salesPrior: 0.00, salesCurrent: 26903.29, territory: "East" },
+  { id: "ALAUDI868", name: "Audio Source", salesPrior: 58603.81, salesCurrent: 20780.76, territory: "Entertainment" },
+  { id: "ALRLVA336", name: "R.L. Vanstory", salesPrior: 31653.20, salesCurrent: 14454.75, territory: "East" },
+  { id: "ALINTE212", name: "International Lights", salesPrior: 322631.61, salesCurrent: 14403.24, territory: "East" },
+  { id: "ALJLOP000", name: "J. Lopez", salesPrior: 33826.11, salesCurrent: 10581.17, territory: "Other" },
+  { id: "ALSAJC973", name: "SJ", salesPrior: 11280.35, salesCurrent: 10558.63, territory: "Other" },
+  { id: "ALLEES513", name: "Leesman Lighting Sales", salesPrior: 11322.00, salesCurrent: 10175.60, territory: "Central" },
+  { id: "ALCMBU317", name: "CM Buck & Associates", salesPrior: 71120.24, salesCurrent: 7480.02, territory: "Central" },
+  { id: "ALLDIO330", name: "Lighting Dynamics - Ohio", salesPrior: 50273.31, salesCurrent: 6209.00, territory: "Central" },
+  { id: "ALVISU720", name: "Visual Interest", salesPrior: 0.00, salesCurrent: 4144.97, territory: "Other" },
+  { id: "ALIDAH208", name: "Idaho Lighting Solutions", salesPrior: 4575.94, salesCurrent: 3590.00, territory: "West" },
+  { id: "ALKBST919", name: "K.B. Stephens", salesPrior: 96000.93, salesCurrent: 3437.63, territory: "East" },
+  { id: "ALMLSW616", name: "Michigan Lighting Sales - West", salesPrior: 63154.15, salesCurrent: 2508.00, territory: "Central" },
+  { id: "ALDESI615", name: "Designlight", salesPrior: 4724.61, salesCurrent: 0.00, territory: "Central" },
+  { id: "ALENGI502", name: "Engineered", salesPrior: 4999.42, salesCurrent: 0.00, territory: "Central" },
+  { id: "ALLIGH865", name: "Lighting Trends", salesPrior: 70903.43, salesCurrent: 0.00, territory: "Central" },
+  { id: "ALRELA323", name: "RLA", salesPrior: 7570.00, salesCurrent: 0.00, territory: "Other" },
+  { id: "ALCROW704", name: "Crown", salesPrior: 1897.82, salesCurrent: -1023.00, territory: "East" },
+  { id: "ALJAWL888", name: "JAW Lighting", salesPrior: 122703.37, salesCurrent: -19487.00, territory: "Central" },
+];
 
 const SALES_REP_DATA = RAW_SALES_REP_DATA
   .map((rep) => {
-    const sales2024 = rep.sales2024 ?? 0;
-    const sales2025 = rep.sales2025 ?? 0;
-    const growthAmt = sales2025 - sales2024;
-    const growthPct = sales2024 > 0 ? (growthAmt / sales2024) * 100 : null;
+    const salesPrior = rep.salesPrior ?? 0;
+    const salesCurrent = rep.salesCurrent ?? 0;
+    const growthAmt = salesCurrent - salesPrior;
+    const growthPct = salesPrior > 0 ? (growthAmt / salesPrior) * 100 : null;
     return {
       ...rep,
-      sales2024,
-      sales2025,
+      salesPrior,
+      salesCurrent,
       growthAmt,
       growthPct,
       incentiveRate: rep.incentiveRate ?? null,
       incentivePaid: rep.incentivePaid ?? 0,
     };
   })
-  .sort((a, b) => b.sales2025 - a.sales2025);
+  .sort((a, b) => b.salesCurrent - a.salesCurrent);
 
 const REGION_SUMMARY = (() => {
   const base = {
-    West: { sales2024: 0, sales2025: 0 },
-    Central: { sales2024: 0, sales2025: 0 },
-    East: { sales2024: 0, sales2025: 0 },
-    Canada: { sales2024: 0, sales2025: 0 },
-    Mexico: { sales2024: 0, sales2025: 0 },
-    Entertainment: { sales2024: 0, sales2025: 0 },
+    West: { salesPrior: 0, salesCurrent: 0 },
+    Central: { salesPrior: 0, salesCurrent: 0 },
+    East: { salesPrior: 0, salesCurrent: 0 },
+    Canada: { salesPrior: 0, salesCurrent: 0 },
+    Mexico: { salesPrior: 0, salesCurrent: 0 },
+    Entertainment: { salesPrior: 0, salesCurrent: 0 },
   };
   SALES_REP_DATA.forEach((rep) => {
     const bucket = base[rep.territory];
     if (bucket) {
-      bucket.sales2024 += rep.sales2024;
-      bucket.sales2025 += rep.sales2025;
+      bucket.salesPrior += rep.salesPrior;
+      bucket.salesCurrent += rep.salesCurrent;
     }
   });
   return Object.entries(base).map(([territory, vals]) => {
-    const growthAmt = vals.sales2025 - vals.sales2024;
-    const growthPct = vals.sales2024 > 0 ? (growthAmt / vals.sales2024) * 100 : null;
+    const growthAmt = vals.salesCurrent - vals.salesPrior;
+    const growthPct = vals.salesPrior > 0 ? (growthAmt / vals.salesPrior) * 100 : null;
     return { territory, label: territory, ...vals, growthAmt, growthPct };
   });
 })();
@@ -397,7 +409,7 @@ export default function GMDashboard() {
   const [authError, setAuthError] = useState('');
 
   const [salesRepSort, setSalesRepSort] = useState({
-    key: 'sales2025',
+    key: 'salesCurrent',
     direction: 'desc',
     type: SORT_TYPES.number,
   });
@@ -426,15 +438,15 @@ export default function GMDashboard() {
     () => sortData(SALES_REP_DATA, salesRepSort),
     [salesRepSort]
   );
-  const TOTAL_REVENUE = TOTAL_REVENUE_FY2025;
+  const TOTAL_REVENUE = TOTAL_REVENUE_FY2025; // FY2025 products tab share denominator
 
   const customersWithShare = useMemo(
     () =>
       TOP_CUSTOMERS_DATA.map((customer) => ({
         ...customer,
-        share: (customer.value / TOTAL_REVENUE) * 100,
+        share: (customer.value / CUSTOMER_PERIOD_TOTAL) * 100,
       })),
-    [TOTAL_REVENUE]
+    []
   );
 
   const sortedCustomerData = useMemo(
@@ -911,10 +923,6 @@ const formatPercentWhole = (value) => {
         </>
       ) : activeTab === 'customers' ? (
         <>
-          <div className="mb-6 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-            <span>This tab shows full-year 2025 data. Q3 2026 YTD figures for this view are pending the Acumatica export.</span>
-          </div>
           {/* TOP CUSTOMERS CONTENT */}
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
@@ -922,12 +930,12 @@ const formatPercentWhole = (value) => {
             <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 lg:col-span-3">
               <div className="flex justify-between items-center mb-6">
                 <div>
-                  <h3 className="text-lg font-semibold text-slate-900">Top 20 Customers (FY2025)</h3>
-                  <p className="text-slate-500 text-sm">Ranked by Total Revenue Contribution</p>
+                  <h3 className="text-lg font-semibold text-slate-900">Top 20 Customers ({CUSTOMER_PERIOD_LABEL})</h3>
+                  <p className="text-slate-500 text-sm">Ranked by invoiced sales, net of credit memos</p>
                 </div>
                 <div className="bg-blue-50 px-4 py-2 rounded-lg text-right">
                    <span className="block text-xs text-blue-600 uppercase font-bold tracking-wider">Top 20 Total</span>
-                   <span className="block font-bold text-blue-900 text-lg">$5.1M</span>
+                   <span className="block font-bold text-blue-900 text-lg">{formatCompactCurrency(TOP_CUSTOMERS_TOTAL)}</span>
                 </div>
               </div>
               <div className="h-[360px] sm:h-[480px] lg:h-[600px] w-full">
@@ -991,7 +999,7 @@ const formatPercentWhole = (value) => {
                           onClick={() => handleCustomerSort('value')}
                           className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500 justify-end w-full"
                         >
-                          Total Sales (2025)
+                          Total Sales ({CUSTOMER_PERIOD_LABEL})
                           <SortIndicator state={customerSort} column="value" />
                         </button>
                       </th>
@@ -1001,7 +1009,7 @@ const formatPercentWhole = (value) => {
                           onClick={() => handleCustomerSort('share')}
                           className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500 justify-end w-full"
                         >
-                          % of Company Total Sales
+                          % of Q3 Invoiced Sales
                           <SortIndicator state={customerSort} column="share" />
                         </button>
                       </th>
@@ -1036,7 +1044,7 @@ const formatPercentWhole = (value) => {
                   <div key={`mobile-customer-${customer.name}-${idx}`} className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
                     <div className="flex items-center justify-between mb-2">
                       <p className="text-xs text-slate-400 font-semibold">#{idx + 1}</p>
-                      <span className="text-[11px] font-semibold text-slate-500 uppercase">2025</span>
+                      <span className="text-[11px] font-semibold text-slate-500 uppercase">{CUSTOMER_PERIOD_LABEL}</span>
                     </div>
                     <h4 className="text-base font-semibold text-slate-900">{customer.name}</h4>
                     <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
@@ -1047,7 +1055,7 @@ const formatPercentWhole = (value) => {
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-slate-500 uppercase">% of Company</p>
+                        <p className="text-xs text-slate-500 uppercase">% of Q3 Sales</p>
                         <p className="font-semibold text-slate-700">{customer.share.toFixed(1)}%</p>
                       </div>
                     </div>
@@ -1066,7 +1074,7 @@ const formatPercentWhole = (value) => {
         <>
           <div className="mb-6 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
             <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-            <span>This tab shows full-year 2025 data. Q3 2026 YTD figures for this view are pending the Acumatica export.</span>
+            <span>This tab shows full-year 2025 data. To refresh it, run Acumatica's Sales Profitability by Item Class and Item report for Jan 1–Sep 30, 2026 (the Oct 1 export spanned Jan 2025–Oct 2026 in one total).</span>
           </div>
           {/* PRODUCT ANALYSIS CONTENT */}
           
@@ -1231,25 +1239,21 @@ const formatPercentWhole = (value) => {
         </>
       ) : activeTab === 'salesreps' ? (
         <>
-          <div className="mb-6 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-            <span>This tab shows full-year 2025 data. Q3 2026 YTD figures for this view are pending the Acumatica export.</span>
-          </div>
           {/* SALES REPS CONTENT */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 h-full">
-            {/* Chart: 2024 vs 2025 performance */}
+            {/* Chart: prior vs current YTD performance */}
             <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 lg:col-span-3">
               <div className="flex justify-between items-center mb-6">
                 <div>
                   <h3 className="text-lg font-semibold text-slate-900">Sales Rep Performance (Top 20)</h3>
-                  <p className="text-slate-500 text-sm">2025 actuals vs 2024 baseline with growth %</p>
+                  <p className="text-slate-500 text-sm">{CURRENT_LABEL} invoiced sales vs {PRIOR_LABEL} with growth %</p>
                 </div>
                 <div className="flex gap-2 flex-wrap">
                   <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-slate-100 text-slate-700 rounded-full border border-slate-200">
-                    <div className="w-2 h-2 rounded-full bg-slate-300"></div> 2024 Sales
+                    <div className="w-2 h-2 rounded-full bg-slate-300"></div> {PRIOR_LABEL} Sales
                   </div>
                   <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-blue-50 text-blue-700 rounded-full border border-blue-100">
-                    <div className="w-2 h-2 rounded-full bg-blue-500"></div> 2025 Sales
+                    <div className="w-2 h-2 rounded-full bg-blue-500"></div> {CURRENT_LABEL} Sales
                   </div>
                   <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-emerald-50 text-emerald-700 rounded-full border border-emerald-100">
                     <div className="w-2 h-2 rounded-full bg-emerald-500"></div> Growth %
@@ -1283,7 +1287,7 @@ const formatPercentWhole = (value) => {
                       orientation="right"
                       tickFormatter={(val) => `${Math.round(val)}%`}
                       tick={{ fontSize: 11, fill: '#10B981' }}
-                      label={{ value: 'Growth % vs 2024', angle: 90, position: 'insideRight', style: { textAnchor: 'middle', fill: '#10B981', fontSize: 11 } }}
+                      label={{ value: `Growth % vs ${PRIOR_LABEL}`, angle: 90, position: 'insideRight', style: { textAnchor: 'middle', fill: '#10B981', fontSize: 11 } }}
                       domain={['dataMin-10', 'dataMax+10']}
                     />
                     <Tooltip 
@@ -1291,10 +1295,10 @@ const formatPercentWhole = (value) => {
                       contentStyle={{ backgroundColor: '#fff', borderRadius: '8px', border: '1px solid #e2e8f0' }}
                       formatter={(val, name, props) => {
                         const key = props?.dataKey;
-                        if (key === 'sales2024' || key === 'sales2025') {
+                        if (key === 'salesPrior' || key === 'salesCurrent') {
                           return [
                             formatCurrencyFull(val),
-                            key === 'sales2024' ? '2024 Sales' : '2025 Sales'
+                            key === 'salesPrior' ? `${PRIOR_LABEL} Sales` : `${CURRENT_LABEL} Sales`
                           ];
                         }
                         if (key === 'growthPct') {
@@ -1306,9 +1310,9 @@ const formatPercentWhole = (value) => {
                         return [val, name];
                       }}
                     />
-                    <Bar yAxisId="left" dataKey="sales2024" name="2024 Sales" fill="#cbd5e1" radius={[4, 4, 0, 0]} barSize={24} />
-                    <Bar yAxisId="left" dataKey="sales2025" name="2025 Sales" fill="#3B82F6" radius={[4, 4, 0, 0]} barSize={24} />
-                    <Line yAxisId="right" type="monotone" dataKey="growthPct" name="Growth % vs 2024" stroke="#10B981" strokeWidth={2} dot={{ r: 3, fill: "#10B981" }} />
+                    <Bar yAxisId="left" dataKey="salesPrior" name={`${PRIOR_LABEL} Sales`} fill="#cbd5e1" radius={[4, 4, 0, 0]} barSize={24} />
+                    <Bar yAxisId="left" dataKey="salesCurrent" name={`${CURRENT_LABEL} Sales`} fill="#3B82F6" radius={[4, 4, 0, 0]} barSize={24} />
+                    <Line yAxisId="right" type="monotone" dataKey="growthPct" name={`Growth % vs ${PRIOR_LABEL}`} stroke="#10B981" strokeWidth={2} dot={{ r: 3, fill: "#10B981" }} />
                   </ComposedChart>
                 </ResponsiveContainer>
               </div>
@@ -1357,8 +1361,8 @@ const formatPercentWhole = (value) => {
                               <span className={`px-2 py-0.5 rounded text-[11px] font-semibold ${badge}`}>{growthLabel}</span>
                             )}
                           </div>
-                          <div className="text-base font-bold text-slate-900">{formatCurrencyWhole(region.sales2025)}</div>
-                          <p className="text-[11px] text-slate-500">2024: {formatCurrencyWhole(region.sales2024)}</p>
+                          <div className="text-base font-bold text-slate-900">{formatCurrencyWhole(region.salesCurrent)}</div>
+                          <p className="text-[11px] text-slate-500">{PRIOR_LABEL}: {formatCurrencyWhole(region.salesPrior)}</p>
                         </div>
                       );
                     });
@@ -1390,21 +1394,21 @@ const formatPercentWhole = (value) => {
                       <th className="px-6 py-3 text-right bg-slate-50">
                         <button
                           type="button"
-                          onClick={() => handleSalesRepSort('sales2025')}
+                          onClick={() => handleSalesRepSort('salesCurrent')}
                           className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500 w-full justify-end"
                         >
-                          2025 Sales
-                          <SortIndicator state={salesRepSort} column="sales2025" />
+                          {CURRENT_LABEL} Sales
+                          <SortIndicator state={salesRepSort} column="salesCurrent" />
                         </button>
                       </th>
                       <th className="px-6 py-3 text-right bg-slate-50">
                         <button
                           type="button"
-                          onClick={() => handleSalesRepSort('sales2024')}
+                          onClick={() => handleSalesRepSort('salesPrior')}
                           className="flex items-center gap-1 uppercase text-xs font-semibold tracking-wider text-slate-500 w-full justify-end"
                         >
-                          2024 Sales
-                          <SortIndicator state={salesRepSort} column="sales2024" />
+                          {PRIOR_LABEL} Sales
+                          <SortIndicator state={salesRepSort} column="salesPrior" />
                         </button>
                       </th>
                       <th className="px-6 py-3 text-right bg-slate-50">
@@ -1442,8 +1446,8 @@ const formatPercentWhole = (value) => {
                         <tr key={index} className="hover:bg-slate-50 transition-colors">
                           <td className="px-6 py-4 text-center font-medium text-slate-400">#{index + 1}</td>
                           <td className="px-6 py-4 font-medium text-slate-900">{rep.name}</td>
-                          <td className="px-6 py-4 text-right font-mono text-slate-900">{formatCurrencyWhole(rep.sales2025)}</td>
-                          <td className="px-6 py-4 text-right font-mono text-slate-600">{formatCurrencyWhole(rep.sales2024)}</td>
+                          <td className="px-6 py-4 text-right font-mono text-slate-900">{formatCurrencyWhole(rep.salesCurrent)}</td>
+                          <td className="px-6 py-4 text-right font-mono text-slate-600">{formatCurrencyWhole(rep.salesPrior)}</td>
                           <td className={`px-6 py-4 text-right font-mono ${growthPositive ? 'text-emerald-600' : 'text-red-600'}`}>
                             {formatSignedCurrency(rep.growthAmt)}
                           </td>
@@ -1474,12 +1478,12 @@ const formatPercentWhole = (value) => {
                       <h4 className="text-base font-semibold text-slate-900">{rep.name}</h4>
                       <div className="mt-3 grid grid-cols-2 gap-3 text-sm">
                         <div>
-                          <p className="text-xs text-slate-500 uppercase">2024 Sales</p>
-                          <p className="font-mono text-slate-700">{formatCurrencyWhole(rep.sales2024)}</p>
+                          <p className="text-xs text-slate-500 uppercase">{PRIOR_LABEL} Sales</p>
+                          <p className="font-mono text-slate-700">{formatCurrencyWhole(rep.salesPrior)}</p>
                         </div>
                         <div>
-                          <p className="text-xs text-slate-500 uppercase">2025 Sales</p>
-                          <p className="font-mono text-slate-900">{formatCurrencyWhole(rep.sales2025)}</p>
+                          <p className="text-xs text-slate-500 uppercase">{CURRENT_LABEL} Sales</p>
+                          <p className="font-mono text-slate-900">{formatCurrencyWhole(rep.salesCurrent)}</p>
                         </div>
                         <div>
                           <p className="text-xs text-slate-500 uppercase">Δ Sales</p>

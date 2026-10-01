@@ -99,10 +99,6 @@ const EBITDA_CURRENT = -107692.39;
 const NET_INCOME_PRIOR = 118061.29;
 const NET_INCOME_CURRENT = -435877.09;
 
-// Full-year 2025 revenue; still used as the denominator for the FY2025
-// customer / product tabs until a Q3 2026 YTD export is available.
-const TOTAL_REVENUE_FY2025 = 17096341.07;
-
 const ACCESS_STORAGE_KEY = 'acclaim-dashboard-access';
 const APP_PASSWORD = import.meta.env.VITE_DASHBOARD_PASSWORD || '';
 
@@ -206,46 +202,49 @@ const TOP_CUSTOMERS_DATA = [
 ];
 const TOP_CUSTOMERS_TOTAL = TOP_CUSTOMERS_DATA.reduce((sum, c) => sum + c.value, 0);
 
-// PRODUCT ANALYSIS DATA (Updated with ALL ACL- Classes)
+// PRODUCT ANALYSIS DATA — Jan 1–Sep 30, 2026, released transactions, from Acumatica
+// "Sales Profitability by Item Class and Item (Detailed)". Chart shows the ACL- item classes
+// ($12,268,047 of the $12,373,764 branch total); excluded non-ACL classes: SHA-AMCABLE $10,207, SHA-CONT $28,421, SHA-DMXCON $300, XLA-NSTK $66,789.
+// Cost is Acumatica's estimated transaction cost.
+const PRODUCT_PERIOD_TOTAL = 12373764.07; // branch total net sales, share denominator
 const PRODUCT_CLASS_DATA = [
-  { name: "Flood", sales: 2228072.74, margin: 62.49 },
-  { name: "Linear", sales: 1395352.23, margin: 74.26 },
-  { name: "Drivers", sales: 630723.55, margin: 67.16 },
-  { name: "Accessories", sales: 541433.17, margin: 71.20 },
-  { name: "Flex Tape", sales: 518784.26, margin: 81.70 },
-  { name: "Flex Tube", sales: 613610.00, margin: 77.75 },
-  { name: "Control", sales: 398791.72, margin: 50.78 },
-  { name: "Image Proj", sales: 455530.00, margin: 47.84 },
-  { name: "Non-Inv", sales: 254322.98, margin: 100.00 },
-  { name: "Direct View", sales: 222055.01, margin: 66.65 },
-  { name: "Cable/Conn", sales: 194637.97, margin: 64.93 },
-  { name: "Downlights", sales: 51859.95, margin: 34.95 },
-  { name: "Power", sales: 17638.57, margin: 72.58 },
-  { name: "Parts", sales: 10772.20, margin: 65.51 },
-  { name: "LED Lamps", sales: 29101.80, margin: 57.88 },
+  { name: "Linear", cls: "ACL-LINE", sales: 4086829.63, margin: 62.59 },
+  { name: "Flood", cls: "ACL-FLOO", sales: 2935840.59, margin: 52.97 },
+  { name: "Flex Tube", cls: "ACL-FTUB", sales: 1216183.34, margin: 76.22 },
+  { name: "Drivers", cls: "ACL-DRIV", sales: 1107108.57, margin: 64.94 },
+  { name: "Accessories", cls: "ACL-ACCS", sales: 841698.00, margin: 69.41 },
+  { name: "Control", cls: "ACL-CONT", sales: 552969.94, margin: 52.02 },
+  { name: "Flex Tape", cls: "ACL-FTAP", sales: 542189.69, margin: 76.12 },
+  { name: "Cable/Conn", cls: "ACL-CABL", sales: 307275.02, margin: 57.20 },
+  { name: "Image Proj", cls: "ACL-IMAG", sales: 275840.00, margin: 45.31 },
+  { name: "Direct View", cls: "ACL-DIRE", sales: 227062.20, margin: 61.46 },
+  { name: "Downlights", cls: "ACL-DOWN", sales: 75894.92, margin: 49.52 },
+  { name: "Power", cls: "ACL-POWE", sales: 53002.90, margin: 71.35 },
+  { name: "Non-Inv", cls: "ACL-NINV", sales: 39052.53, margin: 100.00 },
+  { name: "Parts", cls: "ACL-PART", sales: 7100.00, margin: 5.17 },
 ].sort((a, b) => b.sales - a.sales);
 
 const TOP_PRODUCTS_DATA = [
-  { rank: 1, sku: "DSW-221-AADN-MC", desc: "Dyna Drum SO 3500K White-Marine", sales: 748151.00 },
-  { rank: 2, sku: "PIL19A-CEN", desc: "Gobo Projector w/ Barn Doors", sales: 559760.00 },
-  { rank: 3, sku: "DDJ-241-ACIN", desc: "Dyna Drum HO QW4 10°", sales: 360056.50 },
-  { rank: 4, sku: "XTA4188", desc: "Linear XTR SO 1 10x35 QW6", sales: 317446.40 },
-  { rank: 5, sku: "UNB-211-ADRN", desc: "Unity S1 10 Deg SF Black", sales: 228173.00 },
-  { rank: 6, sku: "DSC-241-ACIN", desc: "Dyna Drum SO QW4 10° Gray", sales: 182160.00 },
-  { rank: 7, sku: "FLEXOHI24", desc: "Flex One HO Interior 2400K", sales: 141562.14 },
-  { rank: 8, sku: "PBA-243-DTLN", desc: "Pixel Bar Flat 4' Spectrum RGBW", sales: 128848.00 },
-  { rank: 9, sku: "DDV-221-LCIN", desc: "Dyna Drum EO QW-4K 10 OLS", sales: 123520.00 },
-  { rank: 10, sku: "PBA-242-DTLN", desc: "Pixel Bar Round 4' Spectrum RGBW", sales: 122249.20 },
-  { rank: 11, sku: "DDSSL20", desc: "Dyna Drum SO Spread Lens 20°", sales: 120563.19 },
-  { rank: 12, sku: "MLE288-24DC-UD", desc: "288W 24VDC 0-10V & TRIAC Driver", sales: 119440.66 },
-  { rank: 13, sku: "ALD824-C2", desc: "AL Driver 800 24V Class 2", sales: 111989.41 },
-  { rank: 14, sku: "DSC-241-ACIN", desc: "DSC-241-ACIN DYNA DRUM SO QW4 10° GRAY", sales: 101200.00 },
-  { rank: 15, sku: "PIL19A-SEN", desc: "PIL19A Gobo Proj Signage Eng", sales: 98970.00 },
-  { rank: 16, sku: "XTH-241-DRQN", desc: "Linear XTR H1 Aluminum 4' 10x60 QS", sales: 95760.00 },
-  { rank: 17, sku: "START-UP", desc: "Daily Programing And Startup", sales: 95244.93 },
-  { rank: 18, sku: "AJBOX1", desc: "Hybrid Cable Junction Box", sales: 93040.62 },
-  { rank: 19, sku: "ALD224-C2", desc: "AL Driver 200 24V Class 2", sales: 89841.26 },
-  { rank: 20, sku: "XED-LXCV-OPXQ", desc: "Linear One DMX Ext Core 4' RGBW 30x60", sales: 76797.00 },
+  { rank: 1, sku: "DDJ-241-ACIN", desc: "Dyna Drum HO QW4 10\u00ba", sales: 465566.00, cls: "ACL-FLOO" },
+  { rank: 2, sku: "XTA4188", desc: "XTA-241-AUSN Linear XTR SO 1 10x35 QW6", sales: 317446.40, cls: "ACL-LINE" },
+  { rank: 3, sku: "PIL19A-CEN", desc: "PIL19A-EN Gobo Projector wBarn Doors and English Gobo Set", sales: 251840.00, cls: "ACL-IMAG" },
+  { rank: 4, sku: "XTA-241-ARQN", desc: "Linear XTR SO 1' 10X60\u00ba QS (RGBW=3K)", sales: 244713.60, cls: "ACL-LINE" },
+  { rank: 5, sku: "DSC-241-ACIN", desc: "DYNA DRUM SO QW4 10\u00ba GRAY", sales: 221278.78, cls: "ACL-FLOO" },
+  { rank: 6, sku: "ALD004", desc: "AL DRIVER 4", sales: 206145.78, cls: "ACL-DRIV" },
+  { rank: 7, sku: "ALD424-C2", desc: "AL Driver 400 24V Class 2", sales: 202573.90, cls: "ACL-DRIV" },
+  { rank: 8, sku: "XTK-211-DFFN", desc: "Linear XTR H1 Custom 18W per foot 4' 3500K 25\u00ba x 25\u00ba Black", sales: 176064.96, cls: "ACL-LINE" },
+  { rank: 9, sku: "UNA-6003-ADRN", desc: "UNITY H1 RAL#6003", sales: 167532.00, cls: "ACL-FLOO" },
+  { rank: 10, sku: "ALD824-C2", desc: "AL Driver 800 24V Class 2", sales: 159084.65, cls: "ACL-DRIV" },
+  { rank: 11, sku: "ALD224-C2", desc: "AL Driver 200 24V Class 2", sales: 157966.35, cls: "ACL-DRIV" },
+  { rank: 12, sku: "AJBOX1", desc: "HYBRID CABLE JUNCTION BOX", sales: 156781.59, cls: "ACL-ACCS" },
+  { rank: 13, sku: "START-UP", desc: "DAILY PROGRAMING AND STARTUP NOT TO INCL", sales: 124024.45, cls: "ACL-NINV" },
+  { rank: 14, sku: "ART-500", desc: "1024 Ch Touch Panel DMX Controller", sales: 120496.76, cls: "ACL-CONT" },
+  { rank: 15, sku: "XTA-211-DLEN", desc: "Linear XTR SO Black 4\u2019 100\u00ba x 100\u00ba 3000K", sales: 112776.00, cls: "ACL-LINE" },
+  { rank: 16, sku: "LNEA-COLD-OPTC", desc: "Linear One Exterior Core Kit HO 1' | 3500K 80 CRI | 10\u00ba x 10\u00ba", sales: 111062.50, cls: "ACL-LINE" },
+  { rank: 17, sku: "LXED-LXCV-OPXC", desc: "Linear One DMX Exterior Core Kit 4' | RGBW (W=4000K) | 10\u00ba x 10\u00ba", sales: 110304.00, cls: "ACL-LINE" },
+  { rank: 18, sku: "UNA-211-ACRN", desc: "Unity H1 20 Deg Black SF", sales: 110200.00, cls: "ACL-FLOO" },
+  { rank: 19, sku: "MLE96-24DC-UD", desc: "96W 24VDC 0-10V & TRIAC Driver", sales: 105740.00, cls: "ACL-DRIV" },
+  { rank: 20, sku: "XTH-241-DRQN", desc: "Linear XTR H1 Aluminum 4\u2019 10\u00ba x 60\u00ba QS", sales: 101364.00, cls: "ACL-LINE" },
 ];
 
 // SALES REP DATA — invoiced sales by default salesperson, Jan–Sep 2025 (prior) vs Jan–Sep 2026 (current).
@@ -438,7 +437,6 @@ export default function GMDashboard() {
     () => sortData(SALES_REP_DATA, salesRepSort),
     [salesRepSort]
   );
-  const TOTAL_REVENUE = TOTAL_REVENUE_FY2025; // FY2025 products tab share denominator
 
   const customersWithShare = useMemo(
     () =>
@@ -457,9 +455,9 @@ export default function GMDashboard() {
     () =>
       TOP_PRODUCTS_DATA.map((product) => ({
         ...product,
-        share: (product.sales / TOTAL_REVENUE) * 100,
+        share: (product.sales / PRODUCT_PERIOD_TOTAL) * 100,
       })),
-    [TOTAL_REVENUE]
+    []
   );
 
   const sortedProductData = useMemo(
@@ -1072,18 +1070,14 @@ const formatPercentWhole = (value) => {
         </>
       ) : activeTab === 'products' ? (
         <>
-          <div className="mb-6 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-            <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-            <span>This tab shows full-year 2025 data. To refresh it, run Acumatica's Sales Profitability by Item Class and Item report for Jan 1–Sep 30, 2026 (the Oct 1 export spanned Jan 2025–Oct 2026 in one total).</span>
-          </div>
           {/* PRODUCT ANALYSIS CONTENT */}
           
           {/* Row 1: Item Class Performance */}
           <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 mb-8">
              <div className="flex justify-between items-center mb-6">
                 <div>
-                  <h3 className="text-lg font-semibold text-slate-900">Sales by Item Class</h3>
-                  <p className="text-slate-500 text-sm">Revenue vs Margin %</p>
+                  <h3 className="text-lg font-semibold text-slate-900">Sales by Item Class ({CURRENT_LABEL})</h3>
+                  <p className="text-slate-500 text-sm">Net sales vs margin %, ACL item classes</p>
                 </div>
                 <div className="flex gap-2">
                   <div className="flex items-center gap-1.5 text-xs font-medium px-3 py-1 bg-blue-50 text-blue-700 rounded-full border border-blue-100">
@@ -1127,11 +1121,11 @@ const formatPercentWhole = (value) => {
           <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
              <div className="px-6 py-4 border-b border-slate-100 bg-slate-100 flex justify-between items-center">
                 <div>
-                  <h3 className="font-semibold text-slate-900">Top 20 Products (FY2025)</h3>
-                  <p className="text-slate-500 text-xs mt-0.5">Ranked by Line Total</p>
+                  <h3 className="font-semibold text-slate-900">Top 20 Products ({CURRENT_LABEL})</h3>
+                  <p className="text-slate-500 text-xs mt-0.5">Ranked by net sales, Jan–Sep 2026</p>
                 </div>
                 <div className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-lg text-xs font-medium border border-emerald-100">
-                   Top Product = 4.7% of Revenue
+                   Top Product = {((TOP_PRODUCTS_DATA[0].sales / PRODUCT_PERIOD_TOTAL) * 100).toFixed(1)}% of Revenue
                 </div>
              </div>
              <div className="overflow-x-auto">
@@ -1211,7 +1205,7 @@ const formatPercentWhole = (value) => {
                  <div key={`mobile-product-${prod.sku}-${idx}`} className="bg-white border border-slate-200 rounded-xl p-4 shadow-sm">
                    <div className="flex items-center justify-between mb-2">
                      <p className="text-xs text-slate-400 font-semibold">#{idx + 1}</p>
-                     <span className="text-[11px] font-semibold text-slate-500 uppercase">2025</span>
+                     <span className="text-[11px] font-semibold text-slate-500 uppercase">{CURRENT_LABEL}</span>
                    </div>
                    <p className="font-mono text-indigo-600 text-sm">{prod.sku}</p>
                    <h4 className="text-base font-semibold text-slate-900">{prod.desc}</h4>

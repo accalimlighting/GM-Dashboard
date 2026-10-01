@@ -40,56 +40,68 @@ import {
 
 // --- DATA SECTION ---
 
+// Period labels: Jan–Sep (through Q3) of each year, from the Sep 30 P&L exports.
+const PRIOR_LABEL = '2025 YTD';
+const CURRENT_LABEL = '2026 YTD';
+const PERIOD_LABEL = 'Q3 2026 YTD (Jan–Sep)';
+
 const YOY_DATA = [
   { 
     category: "Revenue & Profit",
     items: [
-      { name: "Total Sales", y2024: 15038228.95, y2025: 17096341.07, format: "currency", invertColor: false },
-      { name: "Cost of Goods Sold", y2024: 10187029.96, y2025: 10358175.10, format: "currency", invertColor: true },
-      { name: "Gross Profit", y2024: 4851198.99, y2025: 6738165.97, format: "currency", invertColor: false },
-      { name: "Gross Margin", y2024: 32.3, y2025: 39.4, format: "percent", invertColor: false },
-      { name: "EBITDA", y2024: -953185.16, y2025: 505749.81, format: "currency", invertColor: false },
-      { name: "EBITDA Margin", y2024: -6.3, y2025: 3.0, format: "percent", invertColor: false },
-      { name: "Net Income", y2024: -1138149.23, y2025: 222153.70, format: "currency", invertColor: false },
+      { name: "Total Sales", y2025: 13858554.30, y2026: 12397099.10, format: "currency", invertColor: false },
+      { name: "Cost of Goods Sold", y2025: 8930504.75, y2026: 7009350.52, format: "currency", invertColor: true },
+      { name: "Gross Profit", y2025: 4928049.55, y2026: 5387748.58, format: "currency", invertColor: false },
+      { name: "Gross Margin", y2025: 35.6, y2026: 43.5, format: "percent", invertColor: false },
+      { name: "EBITDA", y2025: 315428.75, y2026: -107692.39, format: "currency", invertColor: false },
+      { name: "EBITDA Margin", y2025: 2.3, y2026: -0.9, format: "percent", invertColor: false },
+      { name: "Net Income", y2025: 118061.29, y2026: -435877.09, format: "currency", invertColor: false },
     ]
   },
   {
     category: "Key Expense Drivers",
     items: [
-      { name: "Labor Expenses", y2024: 2089865.44, y2025: 2386231.43, format: "currency", invertColor: true },
-      { name: "Commissions", y2024: 1715290.06, y2025: 1634886.25, format: "currency", invertColor: true },
-      { name: "Tariffs & Duties", y2024: 2348528.42, y2025: 2776282.99, format: "currency", invertColor: true },
-      { name: "Overage Expense", y2024: 740727.26, y2025: 281401.83, format: "currency", invertColor: true },
+      { name: "Labor Expenses", y2025: 1814794.52, y2026: 1761804.15, format: "currency", invertColor: true },
+      { name: "Commissions", y2025: 1150080.79, y2026: 2087693.15, format: "currency", invertColor: true },
+      { name: "Tariffs & Duties", y2025: 2488708.92, y2026: 55680.62, format: "currency", invertColor: true },
+      { name: "COGS - Other", y2025: 68558.27, y2026: 1112300.48, format: "currency", invertColor: true },
+      { name: "Overage Expense", y2025: 278771.43, y2026: 93828.38, format: "currency", invertColor: true },
+      { name: "Interest Expense", y2025: 200582.51, y2026: 330372.11, format: "currency", invertColor: true },
     ]
   },
   {
     category: "Operational Costs",
     items: [
-      { name: "Freight In", y2024: 580305.75, y2025: 492159.34, format: "currency", invertColor: true },
-      { name: "Freight Out", y2024: 317068.36, y2025: 335128.30, format: "currency", invertColor: true },
-      { name: "Advertising", y2024: 237228.70, y2025: 221384.01, format: "currency", invertColor: true },
-      { name: "R&D", y2024: 111337.39, y2025: 85127.75, format: "currency", invertColor: true },
-      { name: "Trade Shows", y2024: 107151.52, y2025: 62489.51, format: "currency", invertColor: true },
-      { name: "Travel", y2024: 165997.20, y2025: 199147.35, format: "currency", invertColor: true },
+      { name: "Freight In", y2025: 431071.22, y2026: 20799.30, format: "currency", invertColor: true },
+      { name: "Freight Out", y2025: 255367.14, y2026: 283641.91, format: "currency", invertColor: true },
+      { name: "Advertising", y2025: 197154.46, y2026: 233484.33, format: "currency", invertColor: true },
+      { name: "Product Safety Approvals", y2025: 95973.22, y2026: 222902.32, format: "currency", invertColor: true },
+      { name: "R&D", y2025: 68692.67, y2026: 170391.64, format: "currency", invertColor: true },
+      { name: "Trade Shows", y2025: 59225.26, y2026: 52625.79, format: "currency", invertColor: true },
+      { name: "Travel", y2025: 140172.90, y2026: 164883.68, format: "currency", invertColor: true },
     ]
   }
 ];
 
 const HISTORY_DATA = [
-  { month: '2024', sales: 15038228, marginPct: 32.3, ebitda: -953185 },
-  { month: '2025', sales: 17096341, marginPct: 39.4, ebitda: 505750 },
+  { month: PRIOR_LABEL, sales: 13858554, marginPct: 35.6, ebitda: 315429 },
+  { month: CURRENT_LABEL, sales: 12397099, marginPct: 43.5, ebitda: -107692 },
 ];
 
-const TOTAL_REVENUE_2024 = 15038228.95;
-const TOTAL_REVENUE_2025 = 17096341.07;
-const GROSS_MARGIN_2024 = 32.3;
-const GROSS_MARGIN_2025 = 39.4;
-const GROSS_PROFIT_2024 = 4851198.99;
-const GROSS_PROFIT_2025 = 6738165.97;
-const EBITDA_2024 = -953185.16;
-const EBITDA_2025 = 505749.81;
-const NET_INCOME_2024 = -1138149.23;
-const NET_INCOME_2025 = 222153.70;
+const TOTAL_REVENUE_PRIOR = 13858554.30;
+const TOTAL_REVENUE_CURRENT = 12397099.10;
+const GROSS_MARGIN_PRIOR = 35.6;
+const GROSS_MARGIN_CURRENT = 43.5;
+const GROSS_PROFIT_PRIOR = 4928049.55;
+const GROSS_PROFIT_CURRENT = 5387748.58;
+const EBITDA_PRIOR = 315428.75;
+const EBITDA_CURRENT = -107692.39;
+const NET_INCOME_PRIOR = 118061.29;
+const NET_INCOME_CURRENT = -435877.09;
+
+// Full-year 2025 revenue; still used as the denominator for the FY2025
+// customer / product tabs until a Q3 2026 YTD export is available.
+const TOTAL_REVENUE_FY2025 = 17096341.07;
 
 const ACCESS_STORAGE_KEY = 'acclaim-dashboard-access';
 const APP_PASSWORD = import.meta.env.VITE_DASHBOARD_PASSWORD || '';
@@ -101,6 +113,9 @@ const formatCompactCurrency = (value) => {
   return `$${abs.toFixed(0)}`;
 };
 
+const formatSignedCompactCurrency = (value) =>
+  `${value < 0 ? '-' : ''}${formatCompactCurrency(value)}`;
+
 const calculatePercentChange = (current, prior) => {
   if (prior === 0) return 0;
   return ((current - prior) / Math.abs(prior)) * 100;
@@ -111,7 +126,7 @@ const formatDeltaLabel = (percentValue, dollarDiff) => {
   const diffText = `${dollarDiff >= 0 ? '+' : '-'}${formatCompactCurrency(Math.abs(dollarDiff))}`;
   return (
     <>
-      Vs 2024: <span className="font-bold">{pctText}</span> ({diffText})
+      Vs '25 YTD: <span className="font-bold">{pctText}</span> ({diffText})
     </>
   );
 };
@@ -130,37 +145,37 @@ const compareValues = (a, b, type = SORT_TYPES.number) => {
   return valA - valB;
 };
 
-// --- UPDATED CHART DATA ---
+// --- UPDATED CHART DATA (Q3 2026 YTD) ---
 
-// 1. REVENUE ALLOCATION PIE
+// 1. REVENUE ALLOCATION PIE (2026 YTD spend; net loss shown separately since a pie can't hold a negative slice)
 const REVENUE_PIE_DATA = [
-  { name: 'COGS', value: 10358175.10, color: '#EF4444' }, // Red
-  { name: 'Labor', value: 2386231.43, color: '#F59E0B' }, // Orange
-  { name: 'Selling', value: 2734770.37, color: '#FCD34D' }, // Yellow
-  { name: 'OpEx (Admin + Facility)', value: 1111414.36, color: '#6366F1' }, // Indigo
-  { name: 'Net Profit', value: 222153.70, color: '#10B981' }, // Green
-  { name: 'Interest/Tax', value: 283596.11, color: '#94A3B8' }, // Gray
+  { name: 'COGS', value: 7009350.52, color: '#EF4444' }, // Red
+  { name: 'Labor', value: 1761804.15, color: '#F59E0B' }, // Orange
+  { name: 'Selling', value: 2972215.75, color: '#FCD34D' }, // Yellow
+  { name: 'OpEx (Admin + Facility)', value: 761421.07, color: '#6366F1' }, // Indigo
+  { name: 'Interest/Tax', value: 328184.70, color: '#94A3B8' }, // Gray
 ];
 
-// 2. COST EFFICIENCY
+// 2. COST EFFICIENCY (% of revenue)
 const COST_EFFICIENCY_DATA = [
-  { name: 'COGS', y2024: 67.7, y2025: 60.6 },
-  { name: 'Labor', y2024: 13.9, y2025: 14.0 },
-  { name: 'Selling', y2024: 18.4, y2025: 16.0 },
-  { name: 'Admin/Fac', y2024: 6.3, y2025: 6.5 },
+  { name: 'COGS', y2025: 64.4, y2026: 56.5 },
+  { name: 'Labor', y2025: 13.1, y2026: 14.2 },
+  { name: 'Selling', y2025: 14.6, y2026: 24.0 },
+  { name: 'Admin/Fac', y2025: 5.6, y2026: 6.1 },
 ];
 
+// Top 5 by 2026 YTD spend
 const TOP_EXPENSES_DATA = [
-  { name: 'Tariffs & Duties', y2024: 2348528.42, y2025: 2776282.99 },
-  { name: 'Salaries', y2024: 1587365.57, y2025: 1791507.93 },
-  { name: 'Commissions', y2024: 1715290.06, y2025: 1634886.25 },
-  { name: 'Freight In', y2024: 580305.75, y2025: 492159.34 },
-  { name: 'Temp Help', y2024: 400510.60, y2025: 476017.70 },
+  { name: 'Commissions', y2025: 1150080.79, y2026: 2087693.15 },
+  { name: 'Salaries', y2025: 1308565.29, y2026: 1417077.89 },
+  { name: 'COGS - Other', y2025: 68558.27, y2026: 1112300.48 },
+  { name: 'Freight Out', y2025: 255367.14, y2026: 283641.91 },
+  { name: 'Temp Help', y2025: 416379.59, y2026: 239673.31 },
 ];
 
 const LABOR_EFFICIENCY_DATA = [
-  { year: '2024', labor: 2089865.44, sales: 15038228.95, ratio: 7.20 },
-  { year: '2025', labor: 2386231.43, sales: 17096341.07, ratio: 7.16 },
+  { year: PRIOR_LABEL, labor: 1814794.52, sales: 13858554.30, ratio: 7.64 },
+  { year: CURRENT_LABEL, labor: 1761804.15, sales: 12397099.10, ratio: 7.04 },
 ];
 
 // TOP 20 CUSTOMERS
@@ -323,20 +338,20 @@ const REGION_SUMMARY = (() => {
   });
 })();
 
-const REVENUE_PCT_DELTA = calculatePercentChange(TOTAL_REVENUE_2025, TOTAL_REVENUE_2024);
-const REVENUE_DOLLAR_DELTA = TOTAL_REVENUE_2025 - TOTAL_REVENUE_2024;
-const GROSS_MARGIN_PCT_DELTA = GROSS_MARGIN_2025 - GROSS_MARGIN_2024;
-const GROSS_PROFIT_DOLLAR_DELTA = GROSS_PROFIT_2025 - GROSS_PROFIT_2024;
-const EBITDA_PCT_DELTA = calculatePercentChange(EBITDA_2025, EBITDA_2024);
-const EBITDA_DOLLAR_DELTA = EBITDA_2025 - EBITDA_2024;
-const NET_INCOME_PCT_DELTA = calculatePercentChange(NET_INCOME_2025, NET_INCOME_2024);
-const NET_INCOME_DOLLAR_DELTA = NET_INCOME_2025 - NET_INCOME_2024;
+const REVENUE_PCT_DELTA = calculatePercentChange(TOTAL_REVENUE_CURRENT, TOTAL_REVENUE_PRIOR);
+const REVENUE_DOLLAR_DELTA = TOTAL_REVENUE_CURRENT - TOTAL_REVENUE_PRIOR;
+const GROSS_MARGIN_PCT_DELTA = GROSS_MARGIN_CURRENT - GROSS_MARGIN_PRIOR;
+const GROSS_PROFIT_DOLLAR_DELTA = GROSS_PROFIT_CURRENT - GROSS_PROFIT_PRIOR;
+const EBITDA_PCT_DELTA = calculatePercentChange(EBITDA_CURRENT, EBITDA_PRIOR);
+const EBITDA_DOLLAR_DELTA = EBITDA_CURRENT - EBITDA_PRIOR;
+const NET_INCOME_PCT_DELTA = calculatePercentChange(NET_INCOME_CURRENT, NET_INCOME_PRIOR);
+const NET_INCOME_DOLLAR_DELTA = NET_INCOME_CURRENT - NET_INCOME_PRIOR;
 
 const KPI_CARDS = [
   {
     title: "Total Sales",
     category: "GROSS REVENUE",
-    value: formatCompactCurrency(TOTAL_REVENUE_2025),
+    value: formatCompactCurrency(TOTAL_REVENUE_CURRENT),
     subValue: formatDeltaLabel(REVENUE_PCT_DELTA, REVENUE_DOLLAR_DELTA),
     deltaValue: REVENUE_PCT_DELTA,
     icon: DollarSign,
@@ -345,7 +360,7 @@ const KPI_CARDS = [
   {
     title: "Gross Margin",
     category: "GROSS MARGIN",
-    value: `39.4%`,
+    value: `${GROSS_MARGIN_CURRENT.toFixed(1)}%`,
     subValue: formatDeltaLabel(GROSS_MARGIN_PCT_DELTA, GROSS_PROFIT_DOLLAR_DELTA),
     deltaValue: GROSS_MARGIN_PCT_DELTA,
     icon: Activity,
@@ -354,7 +369,7 @@ const KPI_CARDS = [
   {
     title: "EBITDA",
     category: "PROFITABILITY (EBITDA)",
-    value: formatCompactCurrency(EBITDA_2025),
+    value: formatSignedCompactCurrency(EBITDA_CURRENT),
     subValue: formatDeltaLabel(EBITDA_PCT_DELTA, EBITDA_DOLLAR_DELTA),
     deltaValue: EBITDA_PCT_DELTA,
     icon: TrendingUp,
@@ -363,7 +378,7 @@ const KPI_CARDS = [
   {
     title: "Net Income",
     category: "NET INCOME",
-    value: formatCompactCurrency(NET_INCOME_2025),
+    value: formatSignedCompactCurrency(NET_INCOME_CURRENT),
     subValue: formatDeltaLabel(NET_INCOME_PCT_DELTA, NET_INCOME_DOLLAR_DELTA),
     deltaValue: NET_INCOME_PCT_DELTA,
     icon: PieChart,
@@ -411,7 +426,7 @@ export default function GMDashboard() {
     () => sortData(SALES_REP_DATA, salesRepSort),
     [salesRepSort]
   );
-  const TOTAL_REVENUE = TOTAL_REVENUE_2025;
+  const TOTAL_REVENUE = TOTAL_REVENUE_FY2025;
 
   const customersWithShare = useMemo(
     () =>
@@ -495,9 +510,11 @@ export default function GMDashboard() {
 
   const formatValue = (val, type) => {
     if (type === 'percent') return `${val.toFixed(1)}%`;
-    if (Math.abs(val) >= 1000000) return `$${(val / 1000000).toFixed(2)}M`;
-    if (Math.abs(val) >= 1000) return `$${(val / 1000).toFixed(0)}k`;
-    return `$${val.toFixed(0)}`;
+    const sign = val < 0 ? '-' : '';
+    const abs = Math.abs(val);
+    if (abs >= 1000000) return `${sign}$${(abs / 1000000).toFixed(2)}M`;
+    if (abs >= 1000) return `${sign}$${(abs / 1000).toFixed(0)}k`;
+    return `${sign}$${abs.toFixed(0)}`;
   };
 
 const formatCurrencyWhole = (value) => {
@@ -571,7 +588,7 @@ const formatPercentWhole = (value) => {
           </div>
           <div className="flex-grow"></div>
           <div className="flex items-center gap-2">
-            <p className="text-slate-900 text-sm font-semibold">Fiscal Year 2025</p>
+            <p className="text-slate-900 text-sm font-semibold">{PERIOD_LABEL}</p>
           </div>
         </div>
         
@@ -664,7 +681,7 @@ const formatPercentWhole = (value) => {
              
              {/* Chart 1: Profitability Turnaround */}
             <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-              <h3 className="text-lg font-semibold text-slate-900 mb-6">Profitability Turnaround (2024 vs 2025)</h3>
+              <h3 className="text-lg font-semibold text-slate-900 mb-6">Profitability Trend ({PRIOR_LABEL} vs {CURRENT_LABEL})</h3>
               <div className="h-64 sm:h-72 md:h-80 w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={HISTORY_DATA} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
@@ -696,8 +713,8 @@ const formatPercentWhole = (value) => {
 
             {/* Chart 2: P&L Breakdown (Pie Chart) - CENTERED */}
             <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">2025 Revenue Allocation</h3>
-              <p className="text-xs text-slate-500 mb-4">Where did the $17.1M go?</p>
+              <h3 className="text-lg font-semibold text-slate-900 mb-2">{CURRENT_LABEL} Revenue Allocation</h3>
+              <p className="text-xs text-slate-500 mb-4">Where did the {formatCompactCurrency(TOTAL_REVENUE_CURRENT)} go? Spend exceeded revenue by {formatCompactCurrency(Math.abs(NET_INCOME_CURRENT))} (net loss).</p>
               <div className="h-64 sm:h-72 md:h-80 w-full relative">
                 <ResponsiveContainer width="100%" height="100%">
                   <RePieChart>
@@ -724,7 +741,7 @@ const formatPercentWhole = (value) => {
                 {/* Center Label - Centered absolutely within the chart container */}
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center pointer-events-none">
                   <span className="block text-[10px] text-slate-400 uppercase font-bold tracking-wider">Total Rev</span>
-                  <span className="block font-bold text-slate-800 text-sm">$17.1M</span>
+                  <span className="block font-bold text-slate-800 text-sm">{formatCompactCurrency(TOTAL_REVENUE_CURRENT)}</span>
                 </div>
               </div>
             </div>
@@ -801,8 +818,8 @@ const formatPercentWhole = (value) => {
                       formatter={(val) => `${val}%`}
                     />
                     <Legend />
-                    <Bar dataKey="y2024" name="2024 %" fill="#cbd5e1" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="y2025" name="2025 %" fill="#10B981" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="y2025" name={`${PRIOR_LABEL} %`} fill="#cbd5e1" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="y2026" name={`${CURRENT_LABEL} %`} fill="#10B981" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -814,7 +831,7 @@ const formatPercentWhole = (value) => {
           {/* YOY ANALYSIS CONTENT */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 h-full">
             <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 lg:col-span-1">
-              <h3 className="text-lg font-semibold text-slate-900 mb-4">Top 5 Expense Drivers (2024 vs 2025)</h3>
+              <h3 className="text-lg font-semibold text-slate-900 mb-4">Top 5 Expense Drivers ({PRIOR_LABEL} vs {CURRENT_LABEL})</h3>
               <div className="h-[320px] sm:h-[400px] lg:h-[500px] w-full">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={TOP_EXPENSES_DATA} layout="vertical" margin={{ top: 20, right: 30, left: 40, bottom: 5 }}>
@@ -827,8 +844,8 @@ const formatPercentWhole = (value) => {
                       formatter={(val) => `$${val.toLocaleString()}`}
                     />
                     <Legend verticalAlign="top" align="right"/>
-                    <Bar dataKey="y2024" name="2024" fill="#cbd5e1" radius={[0, 4, 4, 0]} barSize={20} />
-                    <Bar dataKey="y2025" name="2025" fill="#ef4444" radius={[0, 4, 4, 0]} barSize={20} />
+                    <Bar dataKey="y2025" name={PRIOR_LABEL} fill="#cbd5e1" radius={[0, 4, 4, 0]} barSize={20} />
+                    <Bar dataKey="y2026" name={CURRENT_LABEL} fill="#ef4444" radius={[0, 4, 4, 0]} barSize={20} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -836,15 +853,15 @@ const formatPercentWhole = (value) => {
 
             <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden lg:col-span-2 h-full">
               <div className="px-6 py-4 border-b border-slate-100 bg-slate-100">
-                <h3 className="font-semibold text-slate-900">Detailed Year-Over-Year Variance</h3>
+                <h3 className="font-semibold text-slate-900">Detailed Year-Over-Year Variance (Jan–Sep)</h3>
               </div>
               <div className="overflow-x-auto">
                   <table className="w-full text-sm text-left">
                     <thead className="text-xs text-slate-500 uppercase bg-slate-50 border-b border-slate-100 sticky top-0">
                       <tr>
                         <th className="px-6 py-3 w-1/3 bg-slate-50">Line Item</th>
-                        <th className="px-6 py-3 text-right bg-slate-50">2024 Actual</th>
-                        <th className="px-6 py-3 text-right bg-slate-50">2025 Actual</th>
+                        <th className="px-6 py-3 text-right bg-slate-50">{PRIOR_LABEL} Actual</th>
+                        <th className="px-6 py-3 text-right bg-slate-50">{CURRENT_LABEL} Actual</th>
                         <th className="px-6 py-3 text-right bg-slate-50">Variance ($)</th>
                         <th className="px-6 py-3 text-right bg-slate-50">Variance (%)</th>
                       </tr>
@@ -856,17 +873,17 @@ const formatPercentWhole = (value) => {
                             <td colSpan={5} className="px-6 py-2 font-bold text-xs text-slate-500 uppercase tracking-wider">{section.category}</td>
                           </tr>
                           {section.items.map((item, itemIdx) => {
-                            const variance = calculateVariance(item.y2025, item.y2024, item.invertColor);
+                            const variance = calculateVariance(item.y2026, item.y2025, item.invertColor);
                             const isPositive = variance.diff > 0;
                             
                             return (
                               <tr key={`${idx}-${itemIdx}`} className="hover:bg-slate-50 transition-colors">
                                 <td className="px-6 py-4 font-medium text-slate-900">{item.name}</td>
                                 <td className="px-6 py-4 text-right text-slate-500">
-                                  {formatValue(item.y2024, item.format)}
+                                  {formatValue(item.y2025, item.format)}
                                 </td>
                                 <td className="px-6 py-4 text-right font-medium text-slate-900">
-                                  {formatValue(item.y2025, item.format)}
+                                  {formatValue(item.y2026, item.format)}
                                 </td>
                                 <td className={`px-6 py-4 text-right font-medium ${variance.isGood ? 'text-emerald-600' : 'text-red-600'}`}>
                                   {isPositive ? '+' : ''}{formatValue(variance.diff, item.format)}
@@ -894,6 +911,10 @@ const formatPercentWhole = (value) => {
         </>
       ) : activeTab === 'customers' ? (
         <>
+          <div className="mb-6 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+            <span>This tab shows full-year 2025 data. Q3 2026 YTD figures for this view are pending the Acumatica export.</span>
+          </div>
           {/* TOP CUSTOMERS CONTENT */}
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
@@ -901,7 +922,7 @@ const formatPercentWhole = (value) => {
             <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-100 lg:col-span-3">
               <div className="flex justify-between items-center mb-6">
                 <div>
-                  <h3 className="text-lg font-semibold text-slate-900">Top 20 Customers (2025)</h3>
+                  <h3 className="text-lg font-semibold text-slate-900">Top 20 Customers (FY2025)</h3>
                   <p className="text-slate-500 text-sm">Ranked by Total Revenue Contribution</p>
                 </div>
                 <div className="bg-blue-50 px-4 py-2 rounded-lg text-right">
@@ -1043,6 +1064,10 @@ const formatPercentWhole = (value) => {
         </>
       ) : activeTab === 'products' ? (
         <>
+          <div className="mb-6 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+            <span>This tab shows full-year 2025 data. Q3 2026 YTD figures for this view are pending the Acumatica export.</span>
+          </div>
           {/* PRODUCT ANALYSIS CONTENT */}
           
           {/* Row 1: Item Class Performance */}
@@ -1094,7 +1119,7 @@ const formatPercentWhole = (value) => {
           <div className="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
              <div className="px-6 py-4 border-b border-slate-100 bg-slate-100 flex justify-between items-center">
                 <div>
-                  <h3 className="font-semibold text-slate-900">Top 20 Products (YTD)</h3>
+                  <h3 className="font-semibold text-slate-900">Top 20 Products (FY2025)</h3>
                   <p className="text-slate-500 text-xs mt-0.5">Ranked by Line Total</p>
                 </div>
                 <div className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-lg text-xs font-medium border border-emerald-100">
@@ -1206,6 +1231,10 @@ const formatPercentWhole = (value) => {
         </>
       ) : activeTab === 'salesreps' ? (
         <>
+          <div className="mb-6 flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
+            <span>This tab shows full-year 2025 data. Q3 2026 YTD figures for this view are pending the Acumatica export.</span>
+          </div>
           {/* SALES REPS CONTENT */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 h-full">
             {/* Chart: 2024 vs 2025 performance */}
